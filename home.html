@@ -1,0 +1,587 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>الرئيسية – اختبارات الألمانية</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Tajawal:wght@400;600;700&display=swap"
+      rel="stylesheet"
+    />
+    <style>
+      :root {
+        --primary: #4f46e5;
+        --primary-2: #6366f1;
+        --accent: #f43f5e;
+        --ok: #10b981;
+        --danger: #ef4444;
+        --bg: #f4f5f8;
+        --card: #ffffff;
+        --text: #1f2937;
+        --muted: #6b7280;
+        --border: #e5e7eb;
+        --shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.08),
+          0 2px 4px -1px rgba(0, 0, 0, 0.06);
+      }
+      * {
+        box-sizing: border-box;
+      }
+      body {
+        margin: 0;
+        font-family: "Tajawal", system-ui, Arial;
+        background: linear-gradient(135deg, #f3f4f6 0%, #e5e7eb 100%);
+        color: var(--text);
+      }
+      .layout {
+        display: grid;
+        grid-template-columns: 280px 1fr;
+        min-height: 100vh;
+      }
+      /* Sidebar */
+      .sidebar {
+        background: var(--card);
+        border-inline-end: 1px solid var(--border);
+        padding: 18px;
+        position: sticky;
+        top: 0;
+        height: 100vh;
+        overflow: auto;
+        box-shadow: var(--shadow);
+      }
+      .brand {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        margin-bottom: 16px;
+      }
+      .logo {
+        width: 38px;
+        height: 38px;
+        border-radius: 10px;
+        background: linear-gradient(135deg, var(--primary-2), var(--primary));
+        display: grid;
+        place-items: center;
+        color: white;
+        font-weight: 700;
+        box-shadow: 0 6px 14px rgba(79, 70, 229, 0.25);
+      }
+      .brand h1 {
+        font-size: 18px;
+        margin: 0;
+      }
+      .muted {
+        color: var(--muted);
+        font-size: 13px;
+      }
+
+      .nav {
+        margin-top: 8px;
+        display: flex;
+        flex-direction: column;
+        gap: 8px;
+      }
+      .section {
+        border: 1px solid var(--border);
+        border-radius: 14px;
+        background: #fff;
+      }
+      .section-header {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 10px;
+        padding: 12px 14px;
+        cursor: pointer;
+        user-select: none;
+      }
+      .section-title {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        font-weight: 700;
+        color: var(--primary);
+      }
+      .chev {
+        transition: transform 0.2s ease;
+      }
+      .section[aria-expanded="true"] .chev {
+        transform: rotate(180deg);
+      }
+      .section-body {
+        display: none;
+        border-top: 1px solid var(--border);
+      }
+      .section[aria-expanded="true"] .section-body {
+        display: block;
+      }
+      .submenu {
+        padding: 10px;
+      }
+      .link {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        padding: 10px 12px;
+        border-radius: 10px;
+        text-decoration: none;
+        color: var(--text);
+        transition: 0.15s;
+        border: 1px solid transparent;
+      }
+      .link:hover {
+        background: #f8fafc;
+        border-color: var(--border);
+      }
+      .chip {
+        font-size: 12px;
+        background: #eef2ff;
+        color: var(--primary);
+        padding: 3px 8px;
+        border-radius: 999px;
+        border: 1px solid #e0e7ff;
+      }
+      .active {
+        background: #fff1f2;
+        border-color: #ffe4e6;
+      }
+
+      /* Content */
+      .content {
+        padding: 28px;
+      }
+      .hero {
+        background: var(--card);
+        border: 1px solid var(--border);
+        border-radius: 20px;
+        padding: 26px;
+        display: grid;
+        grid-template-columns: 1.2fr 0.8fr;
+        gap: 20px;
+        box-shadow: var(--shadow);
+      }
+      .hero h2 {
+        margin: 0 0 8px 0;
+        color: var(--primary);
+      }
+      .row {
+        display: flex;
+        gap: 8px;
+        flex-wrap: wrap;
+        color: var(--muted);
+      }
+      .cta {
+        display: flex;
+        gap: 10px;
+        margin-top: 14px;
+        flex-wrap: wrap;
+      }
+      .btn {
+        all: unset;
+        cursor: pointer;
+        font-weight: 700;
+        padding: 12px 16px;
+        border-radius: 12px;
+        border: 1px solid var(--border);
+        background: linear-gradient(90deg, var(--accent), #fb7185);
+        color: #fff;
+        box-shadow: 0 6px 12px rgba(244, 63, 94, 0.25);
+      }
+      .btn.secondary {
+        background: #fff;
+        color: var(--text);
+      }
+      .grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+        gap: 16px;
+        margin-top: 18px;
+      }
+      .card {
+        background: #fff;
+        border: 1px solid var(--border);
+        border-radius: 16px;
+        padding: 16px;
+        box-shadow: var(--shadow);
+      }
+      .card h3 {
+        margin: 0 0 6px 0;
+        font-size: 18px;
+      }
+      .card p {
+        margin: 4px 0 0 0;
+        color: var(--muted);
+        font-size: 14px;
+      }
+      .badge {
+        display: inline-block;
+        background: #ecfeff;
+        color: #0e7490;
+        border: 1px solid #cffafe;
+        padding: 4px 10px;
+        border-radius: 999px;
+        font-size: 12px;
+      }
+
+      /* Topbar (mobile) */
+      .topbar {
+        display: none;
+        position: sticky;
+        top: 0;
+        z-index: 10;
+        background: #fff;
+        border-bottom: 1px solid var(--border);
+        padding: 10px 14px;
+      }
+      .hamburger {
+        all: unset;
+        cursor: pointer;
+        padding: 8px 10px;
+        border: 1px solid var(--border);
+        border-radius: 10px;
+      }
+      .layout.mobile {
+        grid-template-columns: 1fr;
+      }
+      .layout.mobile .sidebar {
+        position: fixed;
+        inset-inline-start: 0;
+        top: 52px;
+        bottom: 0;
+        width: 80vw;
+        max-width: 320px;
+        transform: translateX(100%);
+        transition: transform 0.2s ease;
+      }
+      .layout.mobile .sidebar.open {
+        transform: translateX(0);
+      }
+
+      /* New Styles for Rama Section */
+      .rama-section {
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        color: white;
+        border-radius: 16px;
+        padding: 20px;
+        margin: 20px 0;
+        text-align: center;
+        box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
+      }
+      .rama-section h2 {
+        color: white;
+        margin-bottom: 10px;
+      }
+      .rama-greeting {
+        font-size: 24px;
+        font-weight: bold;
+        margin: 15px 0;
+        background: rgba(255, 255, 255, 0.2);
+        padding: 10px 15px;
+        border-radius: 12px;
+        display: inline-block;
+      }
+      .mira-channel {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 10px;
+        margin-top: 15px;
+        background: rgba(255, 255, 255, 0.15);
+        padding: 12px;
+        border-radius: 12px;
+      }
+      .mira-channel img {
+        width: 40px;
+        height: 40px;
+        border-radius: 50%;
+        background: white;
+        padding: 5px;
+      }
+
+      @media (max-width: 900px) {
+        .topbar {
+          display: flex;
+          align-items: center;
+          justify-content: space-between;
+        }
+        .layout {
+          grid-template-columns: 1fr;
+        }
+        .sidebar {
+          position: fixed;
+          inset-inline-start: 0;
+          top: 52px;
+          bottom: 0;
+          width: 80vw;
+          max-width: 320px;
+          transform: translateX(100%);
+          transition: transform 0.2s ease;
+        }
+        .sidebar.open {
+          transform: translateX(0);
+        }
+        .content {
+          padding: 16px;
+        }
+        .hero {
+          grid-template-columns: 1fr;
+        }
+        .rama-greeting {
+          font-size: 20px;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <!-- شريط علوي للموبايل -->
+    <div class="topbar">
+      <button class="hamburger" id="menuBtn">☰</button>
+      <strong>اختبارات الألمانية</strong>
+    </div>
+
+    <div class="layout" id="layout">
+      <!-- Sidebar -->
+      <aside class="sidebar" id="sidebar">
+        <div class="brand">
+          <div class="logo">DE</div>
+          <div>
+            <h1>اختبارات الألمانية</h1>
+            <div class="muted">تدرّب على الحالات والقواعد</div>
+          </div>
+        </div>
+
+        <nav class="nav">
+          <!-- قسم الحالات الإعرابية -->
+          <div class="section" id="sec-cases" aria-expanded="true">
+            <div
+              class="section-header"
+              role="button"
+              tabindex="0"
+              aria-controls="cases-body"
+            >
+              <div class="section-title">
+                <!-- أيقونة كتاب -->
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none">
+                  <path
+                    d="M4 19a2 2 0 0 0 2 2h13V5a2 2 0 0 0-2-2H6a2 2 0 0 0-2 2v14Z"
+                    stroke="#4f46e5"
+                    stroke-width="1.6"
+                  />
+                  <path d="M6 3h11v15H6" stroke="#6366f1" stroke-width="1.6" />
+                </svg>
+                الحالات الإعرابية
+              </div>
+              <svg
+                class="chev"
+                width="18"
+                height="18"
+                viewBox="0 0 24 24"
+                fill="none"
+              >
+                <path
+                  d="m6 9 6 6 6-6"
+                  stroke="#6b7280"
+                  stroke-width="2"
+                  stroke-linecap="round"
+                />
+              </svg>
+            </div>
+            <div class="section-body" id="cases-body">
+              <div class="submenu">
+                <!-- عنصر رئيسي: Nominativ -->
+                <a class="link active" href="nominativ.html" id="link-nom">
+                  <span>① Nominativ</span>
+                  <span class="chip">اختبار</span>
+                </a>
+                <!-- عند الضغط على Nominativ يظهر تحته Akkusativ (كما طلبتِ) -->
+                <a class="link" href="akkusativ.html" id="link-akk">
+                  <span>② Akkusativ</span>
+                  <span class="chip">اختبار</span>
+                </a>
+              </div>
+            </div>
+          </div>
+
+          <!-- يمكنك إضافة أقسام أخرى لاحقًا بنفس النمط -->
+          <div class="section" id="sec-vocab" aria-expanded="false">
+            <div
+              class="section-header"
+              role="button"
+              tabindex="0"
+              aria-controls="vocab-body"
+            >
+              <div class="section-title">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none">
+                  <circle
+                    cx="12"
+                    cy="12"
+                    r="8"
+                    stroke="#f43f5e"
+                    stroke-width="1.6"
+                  />
+                  <path
+                    d="M8 12h8M12 8v8"
+                    stroke="#fb7185"
+                    stroke-width="1.6"
+                    stroke-linecap="round"
+                  />
+                </svg>
+                مفردات وتمارين
+              </div>
+              <svg
+                class="chev"
+                width="18"
+                height="18"
+                viewBox="0 0 24 24"
+                fill="none"
+              >
+                <path
+                  d="m6 9 6 6 6-6"
+                  stroke="#6b7280"
+                  stroke-width="2"
+                  stroke-linecap="round"
+                />
+              </svg>
+            </div>
+            <div class="section-body" id="vocab-body">
+              <div class="submenu">
+                <a
+                  class="link"
+                  href="#"
+                  onclick="alert('قريبًا ✨');return false;"
+                >
+                  <span>أسماء وأدواتها</span><span class="badge">قريبًا</span>
+                </a>
+                <a
+                  class="link"
+                  href="#"
+                  onclick="alert('قريبًا ✨');return false;"
+                >
+                  <span>أفعال شائعة</span><span class="badge">قريبًا</span>
+                </a>
+              </div>
+            </div>
+          </div>
+        </nav>
+      </aside>
+
+      <!-- Content -->
+      <main class="content">
+        <section class="rama-section">
+          <h2>مرحباً بكم في منصة تعلم الألمانية</h2>
+          <div class="rama-greeting">Hallo ich bin Rama</div>
+          <p>نقدم لكم أفضل الاختبارات لتعلم اللغة الألمانية</p>
+          <p>اختبر نفسك بعد حضور كل درس</p>
+        </section>
+
+        <section class="hero">
+          <div>
+            <h2>مرحبًا! جاهزة للاختبار؟ 🎯</h2>
+            <p class="muted">
+              ابدئي من Nominativ، وبعدها افتحي Akkusativ من نفس القائمة
+              الجانبية. الروابط بالأسفل تفتح صفحات الاختبارات التي جهّزناها.
+            </p>
+            <div class="cta">
+              <a class="btn" href="nominativ.html">ابدئي بـ Nominativ</a>
+              <a
+                class="btn secondary"
+                href="akkusativ.html"
+                style="border: 1px solid var(--border)"
+                >جرّبي Akkusativ</a
+              >
+            </div>
+            <div class="row" style="margin-top: 10px">
+              <span class="badge">تصحيح فوري</span>
+              <span class="badge">شريط تقدّم</span>
+              <span class="badge">أمثلة الدفتر</span>
+            </div>
+          </div>
+          <div class="card">
+            <h3>نصيحة سريعة</h3>
+            <p>
+              في <b>Nominativ</b> بنسأل: <span class="de">Wer? / Was?</span>،
+              وفي <b>Akkusativ</b> بنستخدم:
+              <span class="de">Wen? / Was?</span> مع الأفعال المتعدّية مثل
+              <span class="de">sehen, haben, kaufen…</span>
+            </p>
+          </div>
+        </section>
+
+        <section class="grid">
+          <div class="card">
+            <h3>اختبار Nominativ</h3>
+            <p>
+              روابط وأفعال الربط:
+              <span class="de">sein, werden, bleiben, heißen, scheinen</span>
+            </p>
+            <div class="cta" style="margin-top: 10px">
+              <a class="btn" href="nominativ.html">افتح الاختبار</a>
+            </div>
+          </div>
+          <div class="card">
+            <h3>اختبار Akkusativ</h3>
+            <p>
+              تحويل <span class="de">der→den</span> و
+              <span class="de">ein→einen</span>، الضمائر
+              <span class="de">mich/dich/ihn…</span>
+            </p>
+            <div class="cta" style="margin-top: 10px">
+              <a class="btn" href="akkusativ.html">افتح الاختبار</a>
+            </div>
+          </div>
+        </section>
+      </main>
+    </div>
+
+    <script>
+      // فتح/طي الأقسام (أكورديون)
+      document.querySelectorAll(".section").forEach((sec) => {
+        const header = sec.querySelector(".section-header");
+        header.addEventListener("click", () => {
+          const expanded = sec.getAttribute("aria-expanded") === "true";
+          sec.setAttribute("aria-expanded", !expanded);
+        });
+        header.addEventListener("keydown", (e) => {
+          if (e.key === "Enter" || e.key === " ") {
+            e.preventDefault();
+            header.click();
+          }
+        });
+      });
+
+      // سلوك الموبايل: زر القائمة
+      const layout = document.getElementById("layout");
+      const sidebar = document.getElementById("sidebar");
+      const menuBtn = document.getElementById("menuBtn");
+      const setMobile = () => {
+        if (window.innerWidth <= 900) {
+          layout.classList.add("mobile");
+        } else {
+          layout.classList.remove("mobile");
+          sidebar.classList.remove("open");
+        }
+      };
+      setMobile();
+      window.addEventListener("resize", setMobile);
+      if (menuBtn)
+        menuBtn.addEventListener("click", () =>
+          sidebar.classList.toggle("open")
+        );
+
+      // تفعيل المطلوب: عند الضغط على Nominativ يظهر تحته Akkusativ (هو ظاهر أصلًا ضمن نفس المجموعة)
+      // لو حبيتي تخفي "Akkusativ" حتى يضغط المستخدم على "Nominativ"، استبدلي الكود التالي بتفعيل بسيط:
+      // مثال: إبقاء القسم مفتوح افتراضيًا:
+      document
+        .getElementById("sec-cases")
+        .setAttribute("aria-expanded", "true");
+
+      // تمييز الرابط النشِط حسب الصفحة (اختياري لو استعملتي الصفحة كأساس روتّينغ بسيط)
+      const here = location.pathname.split("/").pop();
+      if (here.includes("nominativ"))
+        document.getElementById("link-nom")?.classList.add("active");
+      if (here.includes("akkusativ"))
+        document.getElementById("link-akk")?.classList.add("active");
+    </script>
+  </body>
+</html>

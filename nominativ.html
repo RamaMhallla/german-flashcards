@@ -1,0 +1,1135 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>اختبار Nominativ التفاعلي</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Tajawal:wght@300;400;500;700&display=swap"
+      rel="stylesheet"
+    />
+
+    <style>
+      :root {
+        /* ألوان الواجهة العامة (مطابقة لستايلك) */
+        --primary: #4f46e5;
+        --primary-light: #6366f1;
+        --secondary: #ec4899;
+        --success: #10b981;
+        --warning: #f59e0b;
+        --danger: #ef4444;
+        --light-bg: #f9fafb;
+        --card-bg: #ffffff;
+        --text: #1f2937;
+        --text-light: #6b7280;
+        --border: #e5e7eb;
+        --shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1),
+          0 2px 4px -1px rgba(0, 0, 0, 0.06);
+
+        /* ألوان/قيم خاصة بالـ Sidebar */
+        --sidebar-w: 280px;
+        --sidebar-bg: #fff;
+        --sidebar-border: #e5e7eb;
+      }
+
+      * {
+        box-sizing: border-box;
+        margin: 0;
+        padding: 0;
+      }
+
+      body {
+        background: linear-gradient(135deg, #f3f4f6 0%, #e5e7eb 100%);
+        color: var(--text);
+        font-family: "Tajawal", sans-serif;
+        min-height: 100vh;
+      }
+
+      /* ====== تخطيط الصفحة مع Sidebar ====== */
+      .topbar {
+        display: none;
+        position: sticky;
+        top: 0;
+        z-index: 20;
+        background: #fff;
+        border-bottom: 1px solid var(--border);
+        padding: 10px 14px;
+      }
+      .hamburger {
+        all: unset;
+        cursor: pointer;
+        padding: 8px 10px;
+        border: 1px solid var(--border);
+        border-radius: 10px;
+      }
+      .layout {
+        display: grid;
+        grid-template-columns: var(--sidebar-w) 1fr;
+        min-height: 100vh;
+      }
+      aside {
+        background: #fff;
+        border-inline-end: 1px solid var(--border);
+        padding: 18px;
+        position: sticky;
+        top: 0;
+        height: 100vh;
+        overflow: auto;
+        box-shadow: var(--shadow);
+      }
+      .brand {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        margin-bottom: 16px;
+      }
+      .logo {
+        width: 38px;
+        height: 38px;
+        border-radius: 10px;
+        background: linear-gradient(
+          135deg,
+          var(--primary-light),
+          var(--primary)
+        );
+        display: grid;
+        place-items: center;
+        color: #fff;
+        font-weight: 700;
+        box-shadow: 0 6px 14px rgba(79, 70, 229, 0.25);
+      }
+      .brand h1 {
+        font-size: 18px;
+        margin: 0;
+      }
+      .muted {
+        color: var(--text-light);
+        font-size: 13px;
+      }
+
+      nav.nav {
+        margin-top: 8px;
+        display: flex;
+        flex-direction: column;
+        gap: 8px;
+      }
+      .section {
+        border: 1px solid var(--border);
+        border-radius: 14px;
+        background: #fff;
+      }
+      .section-header {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 10px;
+        padding: 12px 14px;
+        cursor: pointer;
+        user-select: none;
+      }
+      .section-title {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        font-weight: 700;
+        color: var(--primary);
+      }
+      .chev {
+        transition: transform 0.2s ease;
+      }
+      .section[aria-expanded="true"] .chev {
+        transform: rotate(180deg);
+      }
+      .section-body {
+        display: none;
+        border-top: 1px solid var(--border);
+      }
+      .section[aria-expanded="true"] .section-body {
+        display: block;
+      }
+      .submenu {
+        padding: 10px;
+      }
+      .slink {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        padding: 10px 12px;
+        border-radius: 10px;
+        text-decoration: none;
+        color: var(--text);
+        transition: 0.15s;
+        border: 1px solid transparent;
+      }
+      .slink:hover {
+        background: #f8fafc;
+        border-color: var(--border);
+      }
+      .chip {
+        font-size: 12px;
+        background: #eef2ff;
+        color: var(--primary);
+        padding: 3px 8px;
+        border-radius: 999px;
+        border: 1px solid #e0e7ff;
+      }
+      .active {
+        background: #eff6ff;
+        border-color: #dbeafe;
+      }
+
+      /* محتوى الصفحة (الاختبار) */
+      main.content {
+        padding: 24px;
+      }
+
+      /* ====== ستايل صفحة الاختبار (كما أرسلتيه) ====== */
+      .app {
+        width: min(980px, 100%);
+        margin-inline: auto;
+      }
+      .header {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 16px;
+        margin-bottom: 24px;
+        flex-wrap: wrap;
+      }
+      h1 {
+        font-size: clamp(24px, 3.4vw, 36px);
+        margin: 0;
+        line-height: 1.3;
+        color: var(--primary);
+        font-weight: 700;
+      }
+      .subtitle {
+        color: var(--text-light);
+        font-size: clamp(14px, 1.6vw, 17px);
+        margin-top: 8px;
+        max-width: 600px;
+      }
+      .card {
+        background: var(--card-bg);
+        border-radius: 20px;
+        box-shadow: var(--shadow);
+        padding: 28px;
+        position: relative;
+        overflow: hidden;
+        border: 1px solid var(--border);
+        transition: transform 0.3s ease;
+      }
+      .card:hover {
+        transform: translateY(-5px);
+      }
+      .progress {
+        height: 12px;
+        background: #f3f4f6;
+        border-radius: 999px;
+        overflow: hidden;
+        margin: 16px 0 28px;
+        box-shadow: inset 0 1px 2px rgba(0, 0, 0, 0.1);
+      }
+      .progress > span {
+        display: block;
+        height: 100%;
+        width: 0%;
+        background: linear-gradient(
+          90deg,
+          var(--primary-light),
+          var(--primary)
+        );
+        transition: width 0.5s ease;
+        border-radius: 999px;
+      }
+      .q-meta {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 12px;
+        color: var(--text-light);
+        margin-bottom: 16px;
+        flex-wrap: wrap;
+      }
+      .q-index {
+        padding: 6px 14px;
+        border-radius: 999px;
+        background: #f1f5f9;
+        color: var(--primary);
+        font-weight: 700;
+        font-size: 14px;
+      }
+      .q-type {
+        font-size: 14px;
+        color: var(--primary);
+        background: #eff6ff;
+        padding: 4px 12px;
+        border-radius: 999px;
+      }
+      .prompt {
+        font-size: clamp(18px, 2.7vw, 24px);
+        line-height: 1.6;
+        margin: 12px 0 24px;
+        color: var(--text);
+      }
+      .de {
+        direction: ltr;
+        unicode-bidi: plaintext;
+        background: #f8fafc;
+        padding: 4px 10px;
+        border-radius: 8px;
+        border: 1px solid var(--border);
+        display: inline-block;
+        font-family: monospace;
+        font-size: 0.95em;
+      }
+      .choices {
+        display: grid;
+        gap: 12px;
+      }
+      .choice {
+        padding: 16px 18px;
+        border-radius: 14px;
+        background: #f8fafc;
+        border: 2px solid var(--border);
+        cursor: pointer;
+        transition: all 0.2s ease;
+        font-weight: 500;
+        text-align: right;
+      }
+      .choice:hover {
+        border-color: var(--primary-light);
+        background: #f0f5ff;
+        transform: translateY(-2px);
+      }
+      .choice.selected {
+        border-color: var(--primary);
+        background: #e0e7ff;
+      }
+      .choice.correct {
+        border-color: var(--success);
+        background: rgba(16, 185, 129, 0.1);
+      }
+      .choice.wrong {
+        border-color: var(--danger);
+        background: rgba(239, 68, 68, 0.1);
+      }
+      .gap-line {
+        display: flex;
+        align-items: center;
+        flex-wrap: wrap;
+        gap: 8px;
+        justify-content: center;
+        margin: 10px 0;
+      }
+      select.gap {
+        appearance: none;
+        padding: 10px 14px;
+        border-radius: 10px;
+        background: #f8fafc;
+        color: var(--text);
+        border: 2px solid var(--border);
+        min-width: 100px;
+        font-family: inherit;
+        font-size: 16px;
+        background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 24 24' stroke='%234f46e5'%3E%3Cpath stroke-linecap='round' stroke-linejoin='round' stroke-width='2' d='M19 9l-7 7-7-7'%3E%3C/path%3E%3C/svg%3E");
+        background-repeat: no-repeat;
+        background-position: left 10px center;
+        background-size: 16px;
+        padding-left: 35px;
+        cursor: pointer;
+        transition: border-color 0.2s;
+      }
+      select.gap:focus {
+        outline: none;
+        border-color: var(--primary);
+      }
+      .mini-note {
+        color: var(--text-light);
+        font-size: 14px;
+        margin-top: 6px;
+      }
+      .actions {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 12px;
+        margin-top: 24px;
+      }
+      button {
+        all: unset;
+        padding: 14px 20px;
+        border-radius: 12px;
+        cursor: pointer;
+        font-weight: 700;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 8px;
+        transition: all 0.2s ease;
+      }
+      .primary {
+        background: linear-gradient(
+          90deg,
+          var(--primary),
+          var(--primary-light)
+        );
+        color: #fff;
+        box-shadow: 0 4px 6px rgba(79, 70, 229, 0.3);
+      }
+      .primary:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 6px 10px rgba(79, 70, 229, 0.4);
+      }
+      .ghost {
+        border: 2px solid var(--border);
+        background: transparent;
+        color: var(--text);
+      }
+      .ghost:hover {
+        border-color: var(--primary-light);
+        color: var(--primary);
+      }
+      .link {
+        color: var(--primary);
+        text-decoration: underline;
+        cursor: pointer;
+        font-weight: 500;
+      }
+      .feedback {
+        margin-top: 20px;
+        padding: 16px;
+        border-radius: 12px;
+        border: 1px solid;
+        font-size: 16px;
+      }
+      .ok {
+        background: rgba(16, 185, 129, 0.1);
+        border-color: var(--success);
+        color: #065f46;
+      }
+      .bad {
+        background: rgba(239, 68, 68, 0.1);
+        border-color: var(--danger);
+        color: #991b1b;
+      }
+      .tip {
+        background: rgba(245, 158, 11, 0.1);
+        border-color: var(--warning);
+        color: #92400e;
+      }
+      .footer {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        margin-top: 20px;
+        color: var(--text-light);
+        flex-wrap: wrap;
+        gap: 10px;
+        font-size: 14px;
+      }
+      .pill {
+        background: #f1f5f9;
+        border: 1px solid var(--border);
+        border-radius: 999px;
+        padding: 6px 12px;
+        font-size: 13px;
+        color: var(--primary);
+        font-weight: 500;
+      }
+      details.examples {
+        margin-top: 28px;
+        background: var(--card-bg);
+        border-radius: 16px;
+        padding: 16px;
+        box-shadow: var(--shadow);
+        border: 1px solid var(--border);
+      }
+      details.examples summary {
+        cursor: pointer;
+        color: var(--primary);
+        font-weight: 700;
+        font-size: 18px;
+        padding: 10px;
+        list-style: none;
+        display: flex;
+        align-items: center;
+        gap: 10px;
+      }
+      details.examples summary::-webkit-details-marker {
+        display: none;
+      }
+      details.examples summary:after {
+        content: "↓";
+        font-size: 16px;
+        transition: transform 0.3s;
+      }
+      details[open].examples summary:after {
+        transform: rotate(180deg);
+      }
+      .examples-wrap {
+        margin-top: 16px;
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+        gap: 12px;
+        padding: 10px;
+      }
+      .ex {
+        background: #f8fafc;
+        border: 1px solid var(--border);
+        border-radius: 12px;
+        padding: 14px;
+        transition: transform 0.2s;
+      }
+      .ex:hover {
+        transform: translateY(-3px);
+      }
+      .ex .de {
+        background: transparent;
+        border: none;
+        padding: 0;
+        font-weight: 500;
+      }
+
+      /* موبايل: إظهار Topbar وإخفاء/إظهار الـ Sidebar */
+      @media (max-width: 900px) {
+        .topbar {
+          display: flex;
+          align-items: center;
+          justify-content: space-between;
+        }
+        .layout {
+          grid-template-columns: 1fr;
+        }
+        aside.sidebar {
+          position: fixed;
+          inset-inline-start: 0;
+          top: 52px;
+          bottom: 0;
+          width: 80vw;
+          max-width: 320px;
+          transform: translateX(100%);
+          transition: transform 0.2s ease;
+        }
+        aside.sidebar.open {
+          transform: translateX(0);
+        }
+        main.content {
+          padding: 16px;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <!-- شريط علوي للموبايل -->
+    <div class="topbar">
+      <button class="hamburger" id="menuBtn">☰</button>
+      <strong>اختبار Nominativ</strong>
+    </div>
+
+    <div class="layout">
+      <!-- ===== Sidebar ===== -->
+      <div id="sidebar"></div>
+      <!-- ===== المحتوى: صفحة الاختبار التي عندك ===== -->
+      <main class="content">
+        <div class="app">
+          <div class="header">
+            <div>
+              <h1>
+                اختبار تفاعلي:
+                <span style="color: var(--primary-light)">Der Nominativ</span>
+              </h1>
+              <div class="subtitle">
+                اختبر فهمك لحالة الرفع بالألمانية باستخدام أمثلة الدفتر (sein,
+                werden, bleiben, heißen, scheinen) + أسئلة
+                <b>Wer/Was</b> والردود بـ <b>kein/e</b>.
+              </div>
+            </div>
+            <div class="pill" id="scorePill">النتيجة: 0 / 0</div>
+          </div>
+
+          <div class="progress"><span id="bar"></span></div>
+
+          <div class="card" id="quizCard">
+            <div class="q-meta">
+              <div class="q-index" id="qIndex">سؤال 1 / ?</div>
+              <div class="q-type" id="qType"></div>
+            </div>
+            <div class="prompt" id="prompt"></div>
+            <div id="content"></div>
+            <div class="actions">
+              <button class="primary" id="checkBtn"><span>تحقّق</span></button>
+              <button class="ghost" id="nextBtn" disabled>
+                <span>التالي</span><span>⟵</span>
+              </button>
+              <button class="ghost" id="restartBtn">
+                <span>إعادة البدء</span>
+              </button>
+            </div>
+            <div id="feedback"></div>
+            <div class="footer">
+              <span
+                >تلميح: الأسماء بعد
+                <span class="de"
+                  >sein / werden / bleiben / heißen / scheinen</span
+                >
+                تكون في <b>Nominativ</b>.</span
+              >
+              <span class="pill" id="catPill">—</span>
+            </div>
+          </div>
+
+          <details class="examples">
+            <summary>📒 أمثلة الدفتر المُستخدمة (انقر للعرض)</summary>
+            <div class="examples-wrap">
+              <div class="ex">
+                <div class="de">Das ist der Mann / ein Mann / kein Mann</div>
+              </div>
+              <div class="ex">
+                <div class="de">Das ist die Frau / eine Frau / keine Frau</div>
+              </div>
+              <div class="ex">
+                <div class="de">Das ist das Kind / ein Kind / kein Kind</div>
+              </div>
+              <div class="ex">
+                <div class="de">
+                  Das sind die Kinder / Kinder / keine Kinder
+                </div>
+              </div>
+              <div class="ex">
+                <div class="de">Wer telefoniert? — Der Mann telefoniert.</div>
+              </div>
+              <div class="ex">
+                <div class="de">Was ist klein? — Das Auto ist klein.</div>
+              </div>
+              <div class="ex">
+                <div class="de">Wer ist das? — Das ist Sarah.</div>
+              </div>
+              <div class="ex">
+                <div class="de">
+                  Ist das eine Frau? — Nein, das ist ein Mann. Das ist keine
+                  Frau.
+                </div>
+              </div>
+              <div class="ex">
+                <div class="de">
+                  Ist das ein Auto? — Nein, das ist kein Auto. Das ist ein
+                  Teller.
+                </div>
+              </div>
+              <div class="ex">
+                <div class="de">
+                  Sind das Bananen? — Nein، das sind keine Bananen.
+                </div>
+              </div>
+              <div class="ex">
+                <div class="de">
+                  Ist das ein Messer? — Nein، das ist kein Messer. Das ist eine
+                  Gabel.
+                </div>
+              </div>
+              <div class="ex">
+                <div class="de">
+                  Sie ist (die) Lehrerin. / Sie will eine Lehrerin werden.
+                </div>
+              </div>
+              <div class="ex">
+                <div class="de">
+                  Er bleibt mein Freund. · Sie heißt Carolina. · Er scheint ein
+                  guter Chef zu sein.
+                </div>
+              </div>
+            </div>
+          </details>
+        </div>
+      </main>
+    </div>
+
+    <script>
+      // ====== أكورديون الأقسام في الـ Sidebar ======
+      document.querySelectorAll(".section").forEach((sec) => {
+        const header = sec.querySelector(".section-header");
+        header.addEventListener("click", () => {
+          const expanded = sec.getAttribute("aria-expanded") === "true";
+          sec.setAttribute("aria-expanded", !expanded);
+        });
+        header.addEventListener("keydown", (e) => {
+          if (e.key === "Enter" || e.key === " ") {
+            e.preventDefault();
+            header.click();
+          }
+        });
+      });
+
+      // ====== موبايل: زر القائمة يفتح/يغلق الـ Sidebar ======
+      const sidebar = document.getElementById("sidebar");
+      const menuBtn = document.getElementById("menuBtn");
+      if (menuBtn)
+        menuBtn.addEventListener("click", () =>
+          sidebar.classList.toggle("open")
+        );
+
+      // ====== كود الاختبار كما هو عندك ======
+      const QUESTIONS = [
+        {
+          type: "mc",
+          cat: "أدوات التعريف/النكرة",
+          prompt: `أكمل: <span class="de">Das ist ___ Mann.</span> <span class="mini-note">(نكرة)</span>`,
+          choices: ["der", "ein", "kein"],
+          answer: 1,
+          explain:
+            'مع sein يكون الاسم في الرفع. المطلوب نكرة مذكّر: <span class="de">ein Mann</span>.',
+        },
+        {
+          type: "mc",
+          cat: "نفي بـ kein",
+          prompt: `أكمل: <span class="de">Das ist ___ Mann.</span> <span class="mini-note">(نفي)</span>`,
+          choices: ["kein", "keinen", "keinem"],
+          answer: 0,
+          explain:
+            'النفي مع الأسماء يكون بـ <span class="de">kein</span> في Nominativ: <span class="de">kein Mann</span>.',
+        },
+        {
+          type: "mc",
+          cat: "أدوات التعريف",
+          prompt: `أكمل: <span class="de">Das ist ___ Frau.</span> <span class="mini-note">(معرّف)</span>`,
+          choices: ["der", "das", "die"],
+          answer: 2,
+          explain: 'المؤنث في Nominativ يأخذ <span class="de">die</span>.',
+        },
+        {
+          type: "mc",
+          cat: "أدوات النكرة",
+          prompt: `أكمل: <span class="de">Das ist ___ Frau.</span> <span class="mini-note">(نكرة)</span>`,
+          choices: ["ein", "eine", "einen"],
+          answer: 1,
+          explain:
+            'المؤنث نكرة في Nominativ: <span class="de">eine Frau</span>.',
+        },
+        {
+          type: "mc",
+          cat: "نفي بـ kein",
+          prompt: `أكمل: <span class="de">Das ist ___ Frau.</span> <span class="mini-note">(نفي)</span>`,
+          choices: ["keine", "keinen", "kein"],
+          answer: 0,
+          explain: 'المؤنث يُنفى بـ <span class="de">keine</span>.',
+        },
+        {
+          type: "mc",
+          cat: "أدوات التعريف",
+          prompt: `أكمل: <span class="de">Das ist ___ Kind.</span> <span class="mini-note">(معرّف)</span>`,
+          choices: ["der", "die", "das"],
+          answer: 2,
+          explain: 'الحيادي في Nominativ: <span class="de">das</span>.',
+        },
+        {
+          type: "mc",
+          cat: "أدوات النكرة",
+          prompt: `أكمل: <span class="de">Das ist ___ Kind.</span> <span class="mini-note">(نكرة)</span>`,
+          choices: ["eine", "ein", "einen"],
+          answer: 1,
+          explain: 'الحيادي نكرة: <span class="de">ein Kind</span>.',
+        },
+        {
+          type: "mc",
+          cat: "نفي بـ kein",
+          prompt: `أكمل: <span class="de">Das ist ___ Kind.</span> <span class="mini-note">(نفي)</span>`,
+          choices: ["kein", "keine", "keinen"],
+          answer: 0,
+          explain: 'الحيادي يُنفى بـ <span class="de">kein</span>.',
+        },
+        {
+          type: "mc",
+          cat: "مفرد/جمع + فعل sein",
+          prompt: `اختر الفعل الصحيح: <span class="de">Das ___ die Kinder.</span>`,
+          choices: [" ist", "sind"],
+          answer: 1,
+          explain: 'مع الجمع نستخدم <span class="de">sind</span>.',
+        },
+        {
+          type: "mc",
+          cat: "جمع نكرة",
+          prompt: `أي جملة صحيحة؟`,
+          choices: [
+            '<span class="de">Das sind Kinder.</span>',
+            '<span class="de">Das sind ein Kinder.</span>',
+            '<span class="de">Das sind eine Kinder.</span>',
+          ],
+          answer: 0,
+          explain:
+            'في الجمع النكرة لا نستخدم أداة: <span class="de">Kinder</span> بدون أداة.',
+        },
+        {
+          type: "mc",
+          cat: "نفي جمع",
+          prompt: `أكمل: <span class="de">Das sind ___ Kinder.</span> <span class="mini-note">(نفي)</span>`,
+          choices: ["kein", "keine", "keinen"],
+          answer: 1,
+          explain: 'نفي الجمع يكون <span class="de">keine</span>.',
+        },
+        {
+          type: "mc",
+          cat: "Wer / Was",
+          prompt: `أي سؤال مناسب لهذه الإجابة: <span class="de">Der Mann telefoniert.</span>`,
+          choices: ["Wer telefoniert?", "Was telefoniert?"],
+          answer: 0,
+          explain: "نسأل عن الفاعل العاقل بـ <b>Wer?</b>.",
+        },
+        {
+          type: "mc",
+          cat: "Wer / Was",
+          prompt: `أي سؤال مناسب: <span class="de">Das Auto ist klein.</span>`,
+          choices: ["Wer ist klein?", "Was ist klein?"],
+          answer: 1,
+          explain: "نسأل عن غير العاقل بـ <b>Was?</b>.",
+        },
+        {
+          type: "mc",
+          cat: "Wer / Was",
+          prompt: `أي سؤال مناسب: <span class="de">Das ist Sarah.</span>`,
+          choices: ["Wer ist das?", "Was ist das?"],
+          answer: 0,
+          explain: "عن الأشخاص نقول: <b>Wer ist das?</b>",
+        },
+        {
+          type: "mc",
+          cat: "سؤال/جواب",
+          prompt: `اختر الإجابة الصحيحة: <span class="de">Ist das eine Frau?</span>`,
+          choices: [
+            '<span class="de">Nein, das ist ein Mann.</span>',
+            '<span class="de">Nein، das ist keine Mann.</span>',
+          ],
+          answer: 0,
+          explain:
+            'الرد الصحيح: ليست امرأة بل رجل: <span class="de">ein Mann</span>.',
+        },
+        {
+          type: "gap",
+          cat: "سؤال/جواب + kein/e",
+          prompt: `أكمل الناقص كما في المثال:`,
+          segments: [
+            '<span class="de">Ist das ein Auto?</span> — <span class="de">Nein, das ist ',
+            " Auto. Das ist ",
+            " Teller.</span>",
+          ],
+          options: [
+            ["kein", "ein", "keine"],
+            ["ein", "eine", "keinen"],
+          ],
+          answer: [0, 0],
+          explain:
+            'نفي: <span class="de">kein Auto</span>. والجملة الثانية إثبات: <span class="de">ein Teller</span>.',
+        },
+        {
+          type: "mc",
+          cat: "جمع منفي",
+          prompt: `اختر الرد الصحيح: <span class="de">Sind das Bananen?</span>`,
+          choices: [
+            '<span class="de">Nein, das sind keine Bananen.</span>',
+            '<span class="de">Nein, das sind kein Bananen.</span>',
+          ],
+          answer: 0,
+          explain: 'نفي الجمع: <span class="de">keine Bananen</span>.',
+        },
+        {
+          type: "gap",
+          cat: "سؤال/جواب + kein/e",
+          prompt: `أكمل الناقص:`,
+          segments: [
+            '<span class="de">Ist das ein Messer?</span> — <span class="de">Nein, das ist ',
+            " Messer. Das ist ",
+            " Gabel.</span>",
+          ],
+          options: [
+            ["kein", "keinen", "keinem"],
+            ["ein", "eine", "einen"],
+          ],
+          answer: [0, 1],
+          explain:
+            'نفي: <span class="de">kein Messer</span>. ثم: <span class="de">eine Gabel</span>.',
+        },
+        {
+          type: "multi",
+          cat: "أفعال تأخذ Nominativ",
+          prompt: `أي الأفعال التالية تُبقي الخبر في حالة <b>Nominativ</b>؟ (اختر كل المناسب)`,
+          choices: [
+            "sein",
+            "werden",
+            "bleiben",
+            "heißen",
+            "scheinen",
+            "haben",
+            "sehen",
+          ],
+          answers: [0, 1, 2, 3, 4],
+          explain:
+            'الأفعال: <span class="de">sein, werden, bleiben, heißen, scheinen</span> تربط المبتدأ بالخبر (Nominativ).',
+        },
+        {
+          type: "mc",
+          cat: "تعريف الحالة",
+          prompt: `ما الحالة النحوية للكلمة المظللة: <span class="de">Sie will <u>eine Lehrerin</u> werden.</span>`,
+          choices: ["Nominativ", "Akkusativ", "Dativ"],
+          answer: 0,
+          explain:
+            'بعد <span class="de">werden</span> يكون الخبر في Nominativ (حتى مع أفعال مودال).',
+        },
+        {
+          type: "mc",
+          cat: "توافق الأداة والصفة",
+          prompt: `اختر التكملة الصحيحة: <span class="de">Er scheint ___ ___ ___ zu sein.</span>`,
+          choices: ["ein guter Chef", "einen guten Chef", "einem guten Chef"],
+          answer: 0,
+          explain:
+            'بعد <span class="de">scheinen ... zu sein</span> الخبر في Nominativ: <span class="de">ein guter Chef</span>.',
+        },
+        {
+          type: "mc",
+          cat: "تعريف الحالة",
+          prompt: `ما الحالة لكلمة <span class="de">Freund</span> في الجملة: <span class="de">Er bleibt mein Freund.</span>`,
+          choices: ["Nominativ", "Akkusativ", "Dativ"],
+          answer: 0,
+          explain: 'بعد <span class="de">bleiben</span> الخبر في Nominativ.',
+        },
+        {
+          type: "mc",
+          cat: "تعريف الحالة",
+          prompt: `ما الحالة لاسم العلم في: <span class="de">Sie heißt Carolina.</span>`,
+          choices: ["Nominativ", "Akkusativ", "Genitiv"],
+          answer: 0,
+          explain:
+            'بعد <span class="de">heißen</span> يأتي الخبر في Nominativ.',
+        },
+      ];
+
+      let idx = 0,
+        score = 0,
+        checked = false;
+      const bar = document.getElementById("bar");
+      const qIndex = document.getElementById("qIndex");
+      const qType = document.getElementById("qType");
+      const promptEl = document.getElementById("prompt");
+      const content = document.getElementById("content");
+      const feedback = document.getElementById("feedback");
+      const checkBtn = document.getElementById("checkBtn");
+      const nextBtn = document.getElementById("nextBtn");
+      const restartBtn = document.getElementById("restartBtn");
+      const scorePill = document.getElementById("scorePill");
+      const catPill = document.getElementById("catPill");
+
+      function render() {
+        const q = QUESTIONS[idx];
+        checked = false;
+        feedback.innerHTML = "";
+        nextBtn.disabled = true;
+        checkBtn.disabled = false;
+        qIndex.textContent = `سؤال ${idx + 1} / ${QUESTIONS.length}`;
+        catPill.textContent = q.cat || "—";
+        qType.textContent =
+          q.type === "mc"
+            ? "اختيار من متعدد"
+            : q.type === "multi"
+            ? "أسئلة متعددة"
+            : "إكمال الفراغات";
+        promptEl.innerHTML = q.prompt;
+        content.innerHTML = "";
+
+        if (q.type === "mc") {
+          const wrap = document.createElement("div");
+          wrap.className = "choices";
+          q.choices.forEach((c, i) => {
+            const btn = document.createElement("button");
+            btn.className = "choice";
+            btn.innerHTML = c;
+            btn.onclick = () => selectSingle(i, wrap);
+            wrap.appendChild(btn);
+          });
+          content.appendChild(wrap);
+        }
+        if (q.type === "multi") {
+          const wrap = document.createElement("div");
+          wrap.className = "choices";
+          q.choices.forEach((c) => {
+            const btn = document.createElement("button");
+            btn.className = "choice";
+            btn.innerHTML = c;
+            btn.onclick = () => btn.classList.toggle("selected");
+            wrap.appendChild(btn);
+          });
+          content.appendChild(wrap);
+        }
+        if (q.type === "gap") {
+          const gl = document.createElement("div");
+          gl.className = "gap-line";
+          q.segments.forEach((seg, i) => {
+            gl.insertAdjacentHTML("beforeend", seg);
+            if (i < q.options.length) {
+              const sel = document.createElement("select");
+              sel.className = "gap";
+              q.options[i].forEach((opt) => {
+                const o = document.createElement("option");
+                o.value = opt;
+                o.textContent = opt;
+                sel.appendChild(o);
+              });
+              gl.appendChild(sel);
+            }
+          });
+          content.appendChild(gl);
+        }
+
+        bar.style.width = `${(idx / QUESTIONS.length) * 100}%`;
+        scorePill.textContent = `النتيجة: ${score} / ${idx}`;
+      }
+
+      function selectSingle(i, wrap) {
+        [...wrap.children].forEach((ch) => ch.classList.remove("selected"));
+        wrap.children[i].classList.add("selected");
+      }
+
+      function getUserAnswer(q) {
+        if (q.type === "mc") {
+          const sel = content.querySelector(".choice.selected");
+          return sel
+            ? [...content.querySelectorAll(".choice")].indexOf(sel)
+            : null;
+        }
+        if (q.type === "multi") {
+          return [...content.querySelectorAll(".choice.selected")]
+            .map((btn) => [...content.querySelectorAll(".choice")].indexOf(btn))
+            .sort((a, b) => a - b);
+        }
+        if (q.type === "gap") {
+          return [...content.querySelectorAll("select.gap")].map(
+            (s) => s.value
+          );
+        }
+      }
+
+      function arraysEqual(a, b) {
+        return (
+          Array.isArray(a) &&
+          Array.isArray(b) &&
+          a.length === b.length &&
+          a.every((v, i) => v === b[i])
+        );
+      }
+
+      checkBtn.onclick = () => {
+        if (checked) return;
+        const q = QUESTIONS[idx];
+        const ua = getUserAnswer(q);
+        if (ua === null || (Array.isArray(ua) && ua.length === 0)) {
+          feedback.innerHTML = `<div class="feedback tip">اختر إجابة أولاً.</div>`;
+          return;
+        }
+        checked = true;
+        nextBtn.disabled = false;
+        checkBtn.disabled = true;
+
+        let correct = false;
+        if (q.type === "mc") correct = ua === q.answer;
+        if (q.type === "multi") correct = arraysEqual(ua, q.answers);
+        if (q.type === "gap")
+          correct = arraysEqual(
+            ua,
+            q.answer.map((idxVal, i) => q.options[i][idxVal])
+          );
+
+        if (q.type === "mc") {
+          const btns = [...content.querySelectorAll(".choice")];
+          btns.forEach((b, i) => {
+            if (i === q.answer) b.classList.add("correct");
+            if (i !== q.answer && b.classList.contains("selected"))
+              b.classList.add("wrong");
+          });
+        }
+        if (q.type === "multi") {
+          const btns = [...content.querySelectorAll(".choice")];
+          btns.forEach((b, i) => {
+            if ((q.answers || []).includes(i)) b.classList.add("correct");
+            if (
+              !(q.answers || []).includes(i) &&
+              b.classList.contains("selected")
+            )
+              b.classList.add("wrong");
+          });
+        }
+        if (q.type === "gap") {
+          const sels = [...content.querySelectorAll("select.gap")];
+          sels.forEach((s, i) => {
+            const right = q.options[i][q.answer[i]];
+            s.style.borderColor =
+              s.value === right ? "var(--success)" : "var(--danger)";
+          });
+        }
+
+        feedback.innerHTML = `<div class="feedback ${correct ? "ok" : "bad"}">${
+          correct ? "إجابة صحيحة!" : "إجابة غير صحيحة."
+        } ${q.explain || ""}</div>`;
+        if (correct) score++;
+        scorePill.textContent = `النتيجة: ${score} / ${idx + 1}`;
+        bar.style.width = `${((idx + 1) / QUESTIONS.length) * 100}%`;
+
+        if (idx === QUESTIONS.length - 1) {
+          nextBtn.textContent = "عرض النتيجة";
+        }
+      };
+
+      nextBtn.onclick = () => {
+        if (idx < QUESTIONS.length - 1) {
+          idx++;
+          nextBtn.disabled = true;
+          nextBtn.textContent = "التالي ⟵";
+          render();
+        } else {
+          const percent = Math.round((score / QUESTIONS.length) * 100);
+          document.getElementById("quizCard").innerHTML = `
+        <div class="prompt" style="text-align:center; font-size:28px">انتهى الاختبار ✅</div>
+        <div class="feedback ${
+          percent >= 80 ? "ok" : percent >= 60 ? "tip" : "bad"
+        }" style="font-size:18px; text-align:center">
+          نتيجتك: <b>${score}</b> من <b>${QUESTIONS.length}</b> — (${percent}%)
+        </div>
+        <div class="mini-note" style="text-align:center; margin-top:8px">يمكنك مراجعة أمثلة الدفتر أدناه أو إعادة المحاولة.</div>
+        <div class="actions" style="justify-content:center; margin-top:16px">
+          <button class="primary" onclick="location.reload()">إعادة الاختبار</button>
+        </div>`;
+        }
+      };
+
+      restartBtn.onclick = () => {
+        idx = 0;
+        score = 0;
+        render();
+      };
+      render();
+    </script>
+    <div class="layout">
+      <!-- هنا بيتحمّل الـ sidebar -->
+      <div id="sidebar"></div>
+
+      <main>
+        <!-- باقي الصفحة -->
+      </main>
+    </div>
+
+    <script>
+      // تحميل محتوى sidebar.html
+      fetch("sidebar.html")
+        .then((res) => res.text())
+        .then((html) => {
+          document.getElementById("sidebar").innerHTML = html;
+
+          // فعّل الرابط الحالي (صفحة مفتوحة)
+          const current = location.pathname.split("/").pop();
+          document.querySelectorAll("#sidebar .slink").forEach((a) => {
+            if (a.getAttribute("href") === current) {
+              a.classList.add("active");
+            }
+          });
+        });
+    </script>
+  </body>
+</html>

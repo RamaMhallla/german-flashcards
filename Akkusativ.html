@@ -1,0 +1,1453 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>اختبار Akkusativ — أقسام حسب نوع السؤال</title>
+
+    <!-- خط Tajawal -->
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Tajawal:wght@300;400;500;700&display=swap"
+      rel="stylesheet"
+    />
+
+    <style>
+      :root {
+        --primary: #f43f5e;
+        --primary-light: #fb7185;
+        --success: #10b981;
+        --warning: #f59e0b;
+        --danger: #ef4444;
+        --light-bg: #f9fafb;
+        --card-bg: #fff;
+        --text: #1f2937;
+        --text-light: #6b7280;
+        --border: #e5e7eb;
+        --shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1),
+          0 2px 4px -1px rgba(0, 0, 0, 0.06);
+        --sidebar-w: 280px;
+      }
+
+      * {
+        box-sizing: border-box;
+        margin: 0;
+        padding: 0;
+      }
+
+      body {
+        font-family: "Tajawal", sans-serif;
+        min-height: 100vh;
+        background: linear-gradient(135deg, #f3f4f6 0%, #e5e7eb 100%);
+      }
+
+      /* ===== Layout & Sidebar container ===== */
+      .topbar {
+        display: none;
+        position: sticky;
+        top: 0;
+        z-index: 30;
+        background: #fff;
+        border-bottom: 1px solid var(--border);
+        padding: 10px 14px;
+      }
+      .hamburger {
+        all: unset;
+        cursor: pointer;
+        padding: 8px 10px;
+        border: 1px solid var(--border);
+        border-radius: 10px;
+      }
+
+      .layout {
+        display: grid;
+        grid-template-columns: var(--sidebar-w) 1fr;
+        min-height: 100vh;
+      }
+
+      /* الحاوية اللي منحقن فيها sidebar.html */
+      #sidebar {
+        background: #fff;
+        border-inline-end: 1px solid var(--border);
+        position: sticky;
+        top: 0;
+        height: 100vh;
+        overflow: auto;
+        box-shadow: var(--shadow);
+        z-index: 20;
+      }
+
+      /* موبايل: كأوفرلاي ينزلق */
+      #sidebar.as-overlay {
+        position: fixed;
+        inset-inline-start: 0;
+        top: 52px;
+        bottom: 0;
+        width: 80vw;
+        max-width: 320px;
+        transform: translateX(110%);
+        transition: transform 0.2s ease;
+        border-inline-end: 1px solid var(--border);
+        display: block; /* يظل ظاهر كعنصر لكن خارج الشاشة */
+      }
+      #sidebar.as-overlay.open {
+        transform: translateX(0);
+      }
+
+      main.content {
+        padding: 24px;
+      }
+      .app {
+        width: min(980px, 100%);
+        margin: auto;
+      }
+
+      /* ====== Sidebar inner styling (مهم!) ====== */
+
+      /* رأس الشعار */
+      #sidebar .brand {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        margin-bottom: 16px;
+        padding: 4px 2px;
+      }
+      #sidebar .logo {
+        width: 38px;
+        height: 38px;
+        border-radius: 10px;
+        background: linear-gradient(
+          135deg,
+          var(--primary-light),
+          var(--primary)
+        );
+        display: grid;
+        place-items: center;
+        color: #fff;
+        font-weight: 700;
+        box-shadow: 0 6px 14px rgba(244, 63, 94, 0.25);
+      }
+      #sidebar .brand h2 {
+        font-size: 18px;
+        margin: 0;
+        color: var(--text);
+      }
+      #sidebar .muted {
+        color: var(--text-light);
+        font-size: 13px;
+      }
+
+      /* مجموعة الأقسام */
+      #sidebar nav.nav {
+        display: flex;
+        flex-direction: column;
+        gap: 8px;
+        margin-top: 8px;
+      }
+
+      #sidebar .section {
+        background: #fff;
+        border: 1px solid var(--border);
+        border-radius: 14px;
+        overflow: hidden;
+      }
+      #sidebar .section + .section {
+        margin-top: 10px;
+      }
+
+      #sidebar .section-header {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        padding: 12px 14px;
+        cursor: pointer;
+        user-select: none;
+      }
+      #sidebar .section-title {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        font-weight: 700;
+        color: var(--primary);
+      }
+      #sidebar .chev {
+        transition: transform 0.2s ease;
+      }
+      #sidebar .section[aria-expanded="true"] .chev {
+        transform: rotate(180deg);
+      }
+
+      #sidebar .section-body {
+        display: none;
+        border-top: 1px solid var(--border);
+      }
+      #sidebar .section[aria-expanded="true"] .section-body {
+        display: block;
+      }
+
+      #sidebar .submenu {
+        padding: 10px;
+      }
+
+      /* روابط القائمة */
+      #sidebar .slink {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        padding: 10px 12px;
+        border-radius: 10px;
+        text-decoration: none;
+        color: var(--text);
+        transition: 0.15s;
+        border: 1px solid transparent;
+      }
+      #sidebar .slink:hover {
+        background: #f8fafc;
+        border-color: var(--border);
+      }
+      #sidebar .slink.active {
+        background: #fff1f2;
+        border-color: #fecdd3;
+      }
+
+      /* شارة صغيرة على اليمين */
+      #sidebar .chip {
+        font-size: 12px;
+        background: #ffe4e6;
+        color: var(--primary);
+        padding: 3px 8px;
+        border-radius: 999px;
+        border: 1px solid #fecdd3;
+      }
+
+      /* ===== Header ===== */
+      .header {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 16px;
+        margin-bottom: 24px;
+        flex-wrap: wrap;
+      }
+      h1 {
+        font-size: clamp(24px, 3.4vw, 36px);
+        margin: 0;
+        line-height: 1.3;
+        color: var(--primary);
+        font-weight: 700;
+      }
+      .subtitle {
+        color: var(--text-light);
+        font-size: clamp(14px, 1.6vw, 17px);
+        margin-top: 8px;
+        max-width: 650px;
+      }
+      .pill {
+        background: #f1f5f9;
+        border: 1px solid var(--border);
+        border-radius: 999px;
+        padding: 6px 12px;
+        font-size: 13px;
+        color: var(--primary);
+        font-weight: 600;
+      }
+
+      /* ===== Cards & Quiz ===== */
+      .card {
+        background: var(--card-bg);
+        border-radius: 20px;
+        box-shadow: var(--shadow);
+        padding: 24px;
+        border: 1px solid var(--border);
+      }
+      .progress {
+        height: 12px;
+        background: #f3f4f6;
+        border-radius: 999px;
+        overflow: hidden;
+        margin: 14px 0 18px;
+      }
+      .progress > span {
+        display: block;
+        height: 100%;
+        width: 0%;
+        background: linear-gradient(
+          90deg,
+          var(--primary-light),
+          var(--primary)
+        );
+        transition: width 0.4s ease;
+      }
+      .q-meta {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 12px;
+        color: var(--text-light);
+        margin-bottom: 14px;
+      }
+      .q-index {
+        padding: 6px 14px;
+        border-radius: 999px;
+        background: #f1f5f9;
+        color: var(--primary);
+        font-weight: 700;
+        font-size: 14px;
+      }
+      .q-type {
+        font-size: 14px;
+        color: var(--primary);
+        background: #fff1f2;
+        padding: 4px 12px;
+        border-radius: 999px;
+        border: 1px solid var(--border);
+      }
+      .prompt {
+        font-size: clamp(18px, 2.7vw, 24px);
+        line-height: 1.6;
+        margin: 10px 0 18px;
+        color: var(--text);
+      }
+      .de {
+        direction: ltr;
+        unicode-bidi: plaintext;
+        background: #f8fafc;
+        padding: 4px 10px;
+        border-radius: 8px;
+        border: 1px solid var(--border);
+        display: inline-block;
+        font-family: monospace;
+        font-size: 0.95em;
+      }
+
+      .choices {
+        display: grid;
+        gap: 12px;
+      }
+      .choice {
+        padding: 16px 18px;
+        border-radius: 14px;
+        background: #f8fafc;
+        border: 2px solid var(--border);
+        cursor: pointer;
+        transition: 0.2s;
+        font-weight: 500;
+        text-align: right;
+      }
+      .choice:hover {
+        border-color: var(--primary-light);
+        background: #fff1f2;
+      }
+      .choice.selected {
+        border-color: var(--primary);
+        background: #ffe4e6;
+      }
+      .choice.correct {
+        border-color: var(--success);
+        background: rgba(16, 185, 129, 0.1);
+      }
+      .choice.wrong {
+        border-color: var(--danger);
+        background: rgba(239, 68, 68, 0.1);
+      }
+
+      .gap-line {
+        display: flex;
+        align-items: center;
+        flex-wrap: wrap;
+        gap: 8px;
+        justify-content: center;
+        margin: 10px 0;
+      }
+      select.gap {
+        padding: 10px 14px;
+        border-radius: 10px;
+        background: #f8fafc;
+        color: var(--text);
+        border: 2px solid var(--border);
+        min-width: 110px;
+      }
+
+      .actions {
+        display: flex;
+        gap: 12px;
+        margin-top: 18px;
+        flex-wrap: wrap;
+      }
+      button {
+        all: unset;
+        padding: 12px 18px;
+        border-radius: 12px;
+        cursor: pointer;
+        font-weight: 700;
+        display: flex;
+        align-items: center;
+        gap: 8px;
+      }
+      .primary {
+        background: linear-gradient(
+          90deg,
+          var(--primary),
+          var(--primary-light)
+        );
+        color: #fff;
+      }
+      .ghost {
+        border: 2px solid var(--border);
+        background: #fff;
+        color: var(--text);
+      }
+
+      .feedback {
+        margin-top: 16px;
+        padding: 14px;
+        border-radius: 12px;
+        border: 1px solid;
+      }
+      .ok {
+        background: rgba(16, 185, 129, 0.1);
+        border-color: var(--success);
+        color: #065f46;
+      }
+      .bad {
+        background: rgba(239, 68, 68, 0.1);
+        border-color: var(--danger);
+        color: #991b1b;
+      }
+      .tip {
+        background: rgba(245, 158, 11, 0.1);
+        border-color: var(--warning);
+        color: #92400e;
+      }
+
+      /* أقسام الصفحة */
+      .section-list {
+        display: grid;
+        gap: 14px;
+        margin-bottom: 18px;
+      }
+      .sec-card {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        padding: 14px 16px;
+        border: 1px solid var(--border);
+        border-radius: 14px;
+        background: #fff;
+      }
+      .sec-left {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+      }
+      .sec-title {
+        font-weight: 800;
+        color: var(--primary);
+      }
+      .sec-meta {
+        font-size: 13px;
+        color: var(--text-light);
+      }
+      .start-btn {
+        all: unset;
+        background: linear-gradient(
+          90deg,
+          var(--primary),
+          var(--primary-light)
+        );
+        color: #fff;
+        padding: 10px 14px;
+        border-radius: 10px;
+        cursor: pointer;
+        font-weight: 700;
+      }
+
+      /* type inputs */
+      .type-wrap {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 10px;
+        align-items: center;
+        justify-content: center;
+      }
+      .type-input {
+        padding: 12px 14px;
+        border: 2px solid var(--border);
+        border-radius: 12px;
+        min-width: 280px;
+        font-family: inherit;
+        font-size: 16px;
+        background: #fff;
+        direction: ltr;
+      }
+      .type-input:focus {
+        outline: none;
+        border-color: var(--primary);
+      }
+      .type-input.ok {
+        border-color: var(--success);
+        background: rgba(16, 185, 129, 0.08);
+      }
+      .type-input.bad {
+        border-color: var(--danger);
+        background: rgba(239, 68, 68, 0.08);
+      }
+      .hint {
+        color: var(--text-light);
+        font-size: 13px;
+        margin-top: 6px;
+        text-align: center;
+      }
+
+      /* ===== رسبونسِف ===== */
+      @media (max-width: 900px) {
+        .topbar {
+          display: flex;
+          align-items: center;
+          justify-content: space-between;
+        }
+        .layout {
+          grid-template-columns: 1fr;
+        }
+        /* نخفي نسخة الدِسكتوب من السايدبار ونفعّل الأوفرلاي */
+        #sidebar {
+          display: none;
+        }
+        #sidebar.as-overlay {
+          display: block;
+        }
+        main.content {
+          padding: 16px;
+        }
+      }
+    </style>
+  </head>
+  <script>
+    document.addEventListener("DOMContentLoaded", () => {
+      const sidebarHost = document.getElementById("sidebar");
+      const menuBtn = document.getElementById("menuBtn");
+
+      function applySidebarMode() {
+        const isMobile = window.matchMedia("(max-width: 900px)").matches;
+        if (isMobile) {
+          sidebarHost.classList.add("as-overlay");
+          // بالموبايل ما بدنا sidebar دائم، بيظهر بالـ menu
+        } else {
+          sidebarHost.classList.remove("as-overlay", "open");
+          sidebarHost.style.display = ""; // يرجع للوضع الطبيعي
+        }
+      }
+
+      async function loadSidebar() {
+        try {
+          const res = await fetch("sidebar.html", { cache: "no-cache" });
+          if (!res.ok) throw new Error(res.status + " " + res.statusText);
+          const html = await res.text();
+          sidebarHost.innerHTML = html;
+
+          // فعل طيّ الأقسام
+          sidebarHost.querySelectorAll(".section-header").forEach((h) => {
+            h.addEventListener("click", () => {
+              const s = h.closest(".section");
+              if (s) s.toggleAttribute("aria-expanded");
+            });
+          });
+
+          // علّم الرابط الحالي active
+          const current = location.pathname.split("/").pop() || "index.html";
+          sidebarHost.querySelectorAll(".slink").forEach((a) => {
+            if (a.getAttribute("href") === current) {
+              a.classList.add("active");
+            }
+          });
+
+          applySidebarMode();
+        } catch (err) {
+          console.error("Sidebar load failed:", err);
+          // فallback بسيط
+          sidebarHost.innerHTML = `
+          <aside style="padding:16px">
+            <div style="color:#991b1b;background:#fee2e2;border:1px solid #fecaca;padding:10px;border-radius:10px">
+              تعذّر تحميل <b>sidebar.html</b>. شغّل الصفحة عبر خادم محلي (مثلاً VS Code Live Server) أو تأكد من المسار.
+            </div>
+          </aside>
+        `;
+          applySidebarMode();
+        }
+      }
+
+      // زر القائمة للموبايل
+      if (menuBtn) {
+        menuBtn.addEventListener("click", () => {
+          if (sidebarHost.classList.contains("as-overlay")) {
+            sidebarHost.classList.toggle("open");
+          }
+        });
+      }
+
+      // غلق الأوفرلاي لما يضغط خارج السايدبار (اختياري)
+      document.addEventListener("click", (e) => {
+        if (
+          sidebarHost.classList.contains("as-overlay") &&
+          sidebarHost.classList.contains("open")
+        ) {
+          const inside = e.target.closest("#sidebar, #menuBtn");
+          if (!inside) sidebarHost.classList.remove("open");
+        }
+      });
+
+      window.addEventListener("resize", applySidebarMode);
+
+      loadSidebar();
+    });
+  </script>
+
+  <body>
+    <!-- Top bar للموبايل -->
+    <div class="topbar">
+      <button class="hamburger" id="menuBtn">☰</button>
+      <strong>Akkusativ Quiz</strong>
+    </div>
+
+    <div class="layout">
+      <!-- Sidebar (سيتم حقنه من sidebar.html) -->
+      <div id="sidebar"></div>
+
+      <!-- Main -->
+      <main class="content">
+        <div class="app">
+          <div class="header">
+            <div>
+              <h1>
+                اختبار تفاعلي:
+                <span style="color: var(--primary-light)">Der Akkusativ</span>
+              </h1>
+              <div class="subtitle">
+                الصفحة مقسّمة إلى أقسام حسب نوع السؤال: MC → Multi → Gap → كتابة
+                → ترجمة → صياغة سؤال.
+              </div>
+            </div>
+            <div class="pill" id="globalScore">النتيجة الإجمالية: 0 / 0</div>
+          </div>
+
+          <!-- قائمة الأقسام -->
+          <div class="card" id="sectionsCard">
+            <div class="section-list" id="secList"></div>
+          </div>
+
+          <!-- الكويز النشط -->
+          <div class="card" id="quizCard" style="display: none">
+            <div class="q-meta">
+              <div class="q-index" id="qIndex">سؤال 1 / ?</div>
+              <div class="q-type" id="qType"></div>
+            </div>
+            <div class="progress"><span id="bar"></span></div>
+            <div class="prompt" id="prompt"></div>
+            <div id="content"></div>
+            <div class="actions">
+              <button class="primary" id="checkBtn">تحقّق</button>
+              <button class="ghost" id="nextBtn" disabled>التالي ⟵</button>
+              <button class="ghost" id="exitBtn">إنهاء القسم</button>
+            </div>
+            <div id="feedback"></div>
+            <div class="pill" id="catPill" style="margin-top: 10px">—</div>
+          </div>
+
+          <!-- أمثلة الدفتر -->
+          <details class="card" style="margin-top: 18px">
+            <summary
+              style="cursor: pointer; color: var(--primary); font-weight: 700"
+            >
+              📒 أمثلة الدفتر المعتمدة هنا
+            </summary>
+            <div
+              class="examples-wrap"
+              style="
+                margin-top: 10px;
+                display: grid;
+                grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+                gap: 12px;
+              "
+            >
+              <div class="ex">
+                <div class="de">
+                  Ich sehe den Mann / die Frau / das Kind / die Kinder
+                </div>
+              </div>
+              <div class="ex">
+                <div class="de">
+                  Ich sehe keinen Mann / keine Frau / kein Kind / keine Kinder
+                </div>
+              </div>
+              <div class="ex"><div class="de">Er trinkt einen Kaffee</div></div>
+              <div class="ex">
+                <div class="de">Die Frau kauft eine Jacke und einen Mantel</div>
+              </div>
+              <div class="ex">
+                <div class="de">Hast du einen Freund? · Sie hat einen Hund</div>
+              </div>
+              <div class="ex">
+                <div class="de">Kennst du Sarah? — Ja, ich kenne sie</div>
+              </div>
+              <div class="ex">
+                <div class="de">Kennst du das Kind? — Ja, ich kenne es</div>
+              </div>
+              <div class="ex">
+                <div class="de">Brauchst du das Auto? — Ja, ich brauche es</div>
+              </div>
+              <div class="ex">
+                <div class="de">Wen fragst du? — Ich frage dich</div>
+              </div>
+              <div class="ex">
+                <div class="de">Ich esse den Salat · Ich trinke den Saft</div>
+              </div>
+            </div>
+          </details>
+        </div>
+      </main>
+    </div>
+
+    <script>
+      /* ========= أدوات صغيرة ========= */
+      function arraysEqual(a, b) {
+        return (
+          Array.isArray(a) &&
+          Array.isArray(b) &&
+          a.length === b.length &&
+          a.every((v, i) => v === b[i])
+        );
+      }
+      function normalizeText(s) {
+        return String(s || "")
+          .toLowerCase()
+          .replace(/[؟?!.]+$/, "")
+          .replace(/\s+/g, " ")
+          .trim();
+      }
+
+      /* ========= تحميل الـ Sidebar من ملف منفصل + تفعيل الأحداث ========= */
+      const sidebarHost = document.getElementById("sidebar");
+      const menuBtn = document.getElementById("menuBtn");
+
+      // نحدد وضع الـ sidebar حسب العرض
+      function applySidebarMode() {
+        if (window.matchMedia("(max-width: 900px)").matches) {
+          sidebarHost.classList.add("as-overlay");
+        } else {
+          sidebarHost.classList.remove("as-overlay", "open");
+        }
+      }
+
+      // حمّل محتوى sidebar.html
+      fetch("sidebar.html")
+        .then((res) => res.text())
+        .then((html) => {
+          sidebarHost.innerHTML = html;
+
+          // هايلايت الرابط الحالي
+          const current = location.pathname.split("/").pop() || "index.html";
+          sidebarHost.querySelectorAll(".slink").forEach((a) => {
+            if (a.getAttribute("href") === current) a.classList.add("active");
+          });
+
+          // فعل الطي/الفتح لأقسام القائمة داخل السايدبار
+          sidebarHost.querySelectorAll(".section-header").forEach((h) => {
+            h.addEventListener("click", () => {
+              const s = h.closest(".section");
+              if (s) s.toggleAttribute("aria-expanded");
+            });
+          });
+
+          // وضع الموبايل/الدِسكتوب
+          applySidebarMode();
+        });
+
+      // زر القائمة للموبايل
+      if (menuBtn) {
+        menuBtn.onclick = () => {
+          if (sidebarHost.classList.contains("as-overlay")) {
+            sidebarHost.classList.toggle("open");
+          }
+        };
+      }
+      // أغلق السايدبار عند تغيير الحجم لو انتقلنا من موبايل لدسكتوب
+      window.addEventListener("resize", applySidebarMode);
+
+      /* ========= بنك الأسئلة ========= */
+      const QUESTIONS = [
+        // MC
+        {
+          type: "mc",
+          cat: "der→den",
+          prompt: `أكمل: <span class="de">Ich sehe ___ Mann.</span>`,
+          choices: ["der", "den", "dem"],
+          answer: 1,
+          explain: 'المذكر في Akkusativ يأخذ <span class="de">den</span>.',
+        },
+        {
+          type: "mc",
+          cat: "die (ثابتة)",
+          prompt: `أكمل: <span class="de">Ich sehe ___ Frau.</span>`,
+          choices: ["die", "der", "den"],
+          answer: 0,
+          explain: 'المؤنث يبقى <span class="de">die</span> في Akkusativ.',
+        },
+        {
+          type: "mc",
+          cat: "das (ثابت)",
+          prompt: `أكمل: <span class="de">Ich sehe ___ Kind.</span>`,
+          choices: ["das", "den", "dem"],
+          answer: 0,
+          explain: 'الحيادي يبقى <span class="de">das</span>.',
+        },
+        {
+          type: "mc",
+          cat: "الجمع",
+          prompt: `أكمل: <span class="de">Ich sehe ___ Kinder.</span>`,
+          choices: ["die", "den", "das"],
+          answer: 0,
+          explain: 'الجمع معرّف: <span class="de">die Kinder</span>.',
+        },
+        {
+          type: "mc",
+          cat: "ein→einen",
+          prompt: `أكمل: <span class="de">Er trinkt ___ Kaffee.</span>`,
+          choices: ["ein", "einen", "einem"],
+          answer: 1,
+          explain: 'المذكر النكرة: <span class="de">einen</span>.',
+        },
+        {
+          type: "mc",
+          cat: "kein→keinen",
+          prompt: `أكمل: <span class="de">Ich sehe ___ Mann.</span> <span class="mini-note">(نفي)</span>`,
+          choices: ["kein", "keinen", "keinem"],
+          answer: 1,
+          explain: 'نفي المذكر: <span class="de">keinen</span>.',
+        },
+        {
+          type: "mc",
+          cat: "نفي المؤنث",
+          prompt: `أكمل: <span class="de">Ich sehe ___ Frau.</span> <span class="mini-note">(نفي)</span>`,
+          choices: ["keine", "keinen", "keinem"],
+          answer: 0,
+          explain: '<span class="de">keine Frau</span>.',
+        },
+        {
+          type: "mc",
+          cat: "نفي الحيادي",
+          prompt: `أكمل: <span class="de">Ich sehe ___ Kind.</span> <span class="mini-note">(نفي)</span>`,
+          choices: ["kein", "keine", "keinem"],
+          answer: 0,
+          explain: '<span class="de">kein Kind</span>.',
+        },
+        {
+          type: "mc",
+          cat: "نفي الجمع",
+          prompt: `أكمل: <span class="de">Ich sehe ___ Kinder.</span> <span class="mini-note">(نفي)</span>`,
+          choices: ["keine", "keinen", "keinem"],
+          answer: 0,
+          explain: '<span class="de">keine Kinder</span>.',
+        },
+        {
+          type: "mc",
+          cat: "haben + Akk",
+          prompt: `أكمل: <span class="de">Hast du ___ Freund?</span>`,
+          choices: ["ein", "einen", "einem"],
+          answer: 1,
+          explain: '<span class="de">einen Freund</span>.',
+        },
+        {
+          type: "mc",
+          cat: "haben + Akk",
+          prompt: `أكمل: <span class="de">Sie hat ___ Hund.</span>`,
+          choices: ["ein", "einen", "einem"],
+          answer: 1,
+          explain: '<span class="de">einen Hund</span>.',
+        },
+        {
+          type: "mc",
+          cat: "kaufen + Akk",
+          prompt: `أكمل: <span class="de">Die Frau kauft eine Jacke und ___ Mantel.</span>`,
+          choices: ["ein", "einen", "einem"],
+          answer: 1,
+          explain: '<span class="de">einen Mantel</span>.',
+        },
+        {
+          type: "mc",
+          cat: "trinken + Akk",
+          prompt: `اختر الصحيح: <span class="de">Wir trinken ___ Kaffee.</span>`,
+          choices: ["einen", "ein", "einem"],
+          answer: 0,
+          explain: '<span class="de">einen Kaffee</span>.',
+        },
+        {
+          type: "mc",
+          cat: "essen + Akk",
+          prompt: `اختر الصحيح: <span class="de">Ich esse ___ Salat.</span>`,
+          choices: ["den", "der", "dem"],
+          answer: 0,
+          explain: '<span class="de">den Salat</span>.',
+        },
+        {
+          type: "mc",
+          cat: "trinken + Akk",
+          prompt: `اختر الصحيح: <span class="de">Ich trinke ___ Saft.</span>`,
+          choices: ["den", "der", "dem"],
+          answer: 0,
+          explain: '<span class="de">den Saft</span>.',
+        },
+
+        // MULTI
+        {
+          type: "multi",
+          cat: "أفعال تأخذ Akk",
+          prompt: `اختر كل الأفعال التي تحتاج مفعولًا مباشرًا غالبًا`,
+          choices: [
+            "haben",
+            "brauchen",
+            "sehen",
+            "lieben",
+            "fragen",
+            "sein",
+            "werden",
+            "bleiben",
+          ],
+          answers: [0, 1, 2, 3, 4],
+          explain:
+            "متعدّية: haben/brauchen/sehen/lieben/fragen. أمّا sein/werden/bleiben فليست متعدّية.",
+        },
+        {
+          type: "multi",
+          cat: "ضمائر Akk",
+          prompt: `اختر كل ضمائر المفعول الصحيحة`,
+          choices: [
+            "mich",
+            "dich",
+            "ihn",
+            "sie",
+            "es",
+            "uns",
+            "euch",
+            "ihnen",
+            "Sie",
+          ],
+          answers: [0, 1, 2, 3, 4, 5, 6],
+          explain:
+            "Akk: mich, dich, ihn, sie, es, uns, euch, sie/Sie. (ihnen = Dativ).",
+        },
+
+        // GAP
+        {
+          type: "gap",
+          cat: "Wen/Was",
+          prompt: `اختر أداة السؤال الصحيحة:`,
+          segments: [
+            '<span class="de">___ liebst du?</span> <span class="mini-note">(عن شخص)</span>',
+          ],
+          options: [["Wer", "Wen", "Was"]],
+          answer: [1],
+          explain: "عن المفعول العاقل → <b>Wen</b>.",
+        },
+        {
+          type: "gap",
+          cat: "Wen/Was",
+          prompt: `اختر أداة السؤال الصحيحة:`,
+          segments: [
+            '<span class="de">___ kaufst du?</span> <span class="mini-note">(عن شيء)</span>',
+          ],
+          options: [["Wer", "Wen", "Was"]],
+          answer: [2],
+          explain: "عن الأشياء → <b>Was</b>.",
+        },
+        {
+          type: "gap",
+          cat: "تحويلات شائعة",
+          prompt: `حوّل كما يلزم:`,
+          segments: ['<span class="de">Ich sehe ', " Mann.</span>"],
+          options: [["der", "den", "ein", "einen", "kein", "keinen"]],
+          answer: [1],
+          explain: 'المذكر في Akk: <span class="de">den</span>.',
+        },
+        {
+          type: "gap",
+          cat: "سؤال/جواب",
+          prompt: `أكمل الجوابين:`,
+          segments: [
+            '<span class="de">Hast du ',
+            ' Freund?</span> — <span class="de">Ja, ich habe ',
+            " Freund.</span>",
+          ],
+          options: [
+            ["ein", "einen", "keinen"],
+            ["ein", "einen", "keinen"],
+          ],
+          answer: [1, 1],
+          explain: '<span class="de">einen Freund</span>.',
+        },
+        {
+          type: "gap",
+          cat: "سؤال/جواب",
+          prompt: `أكمل:`,
+          segments: [
+            '<span class="de">Kennst du Sarah?</span> — <span class="de">Ja, ich kenne ',
+            ".</span>",
+          ],
+          options: [["sie", "ihr", "ihnen"]],
+          answer: [0],
+          explain: 'ضمير المؤنث في Akk: <span class="de">sie</span>.',
+        },
+
+        // TYPE (كتابة حرّة تدريب قواعد)
+        {
+          type: "type",
+          cat: "اكتب الشكل الصحيح (مذكر معرّف)",
+          prompt: `حوّل إلى Akkusativ: <span class="de">Ich sehe <b>der Mann</b>.</span>`,
+          note: "der → den",
+          answersText: ["den mann"],
+          explain: '<span class="de">den Mann</span>.',
+        },
+        {
+          type: "type",
+          cat: "اكتب الشكل الصحيح (نكرة)",
+          prompt: `حوّل: <span class="de">Er trinkt <b>ein Kaffee</b>.</span>`,
+          note: "ein → einen",
+          answersText: ["einen kaffee"],
+          explain: '<span class="de">einen Kaffee</span>.',
+        },
+        {
+          type: "type",
+          cat: "ضمائر المفعول",
+          prompt: `بدّل الاسم بضمير مناسب (Akk): <span class="de">Ich sehe <b>Sarah</b>.</span>`,
+          answersText: ["sie"],
+          explain: '<span class="de">Ich sehe sie.</span>',
+        },
+        {
+          type: "type",
+          cat: "Wen/Was كتابة",
+          prompt: `اكتب أداة السؤال: <span class="de">___ liebst du?</span> (عن شخص)`,
+          answersText: ["wen"],
+          explain: "عن العاقل: <b>Wen</b>.",
+        },
+        {
+          type: "type",
+          cat: "kein→keinen",
+          prompt: `حوّل: <span class="de">Ich sehe <b>kein Mann</b>.</span>`,
+          note: "kein → keinen",
+          answersText: ["keinen mann"],
+          explain: '<span class="de">keinen Mann</span>.',
+        },
+        {
+          type: "type",
+          cat: "ضمائر — محايد",
+          prompt: `اكتب الضمير: <span class="de">Kennst du <b>das Kind</b>?</span> — <span class="de">Ja, ich kenne ___.</span>`,
+          answersText: ["es"],
+          explain: '<span class="de">das Kind → es</span>.',
+        },
+
+        // TYPE ترجمة (عربي → ألماني)
+        {
+          type: "type",
+          cat: "ترجمة (Akk)",
+          prompt: `ترجم: <b>أنا أرى الرجل.</b>`,
+          note: "sehen + den Mann",
+          answersText: ["ich sehe den mann"],
+          explain: '<span class="de">Ich sehe den Mann.</span>',
+        },
+        {
+          type: "type",
+          cat: "ترجمة (Akk)",
+          prompt: `ترجم: <b>هي تشتري معطفًا.</b>`,
+          note: "نكرة مذكر → einen",
+          answersText: ["sie kauft einen mantel"],
+          explain: '<span class="de">Sie kauft einen Mantel.</span>',
+        },
+        {
+          type: "type",
+          cat: "ترجمة (ضمائر)",
+          prompt: `ترجم: <b>هل تعرفين سارة؟ نعم، أنا أعرفها.</b>`,
+          answersText: ["kennst du sarah ja ich kenne sie"],
+          explain:
+            '<span class="de">Kennst du Sarah? Ja, ich kenne sie.</span>',
+        },
+
+        // TYPE صياغة السؤال
+        {
+          type: "type",
+          cat: "اصنع سؤال (Wen?)",
+          prompt: `اكتب السؤال عن المفعول:<br><span class="de">Ich liebe <b>Sarah</b>.</span>`,
+          note: "عن شخص → Wen",
+          answersText: ["wen liebst du"],
+          explain: '<span class="de">Wen liebst du?</span>',
+        },
+        {
+          type: "type",
+          cat: "اصنع سؤال (Was?)",
+          prompt: `اكتب السؤال:<br><span class="de">Er kauft <b>das Auto</b>.</span>`,
+          answersText: ["was kauft er"],
+          explain: '<span class="de">Was kauft er?</span>',
+        },
+        {
+          type: "type",
+          cat: "اصنع سؤال (Wen?) — ضمير",
+          prompt: `اكتب السؤال:<br><span class="de">Sie fragt <b>dich</b>.</span>`,
+          answersText: ["wen fragt sie"],
+          explain: '<span class="de">Wen fragt sie?</span>',
+        },
+      ];
+
+      /* ========= تقسيم حسب النوع ========= */
+      const SECTION_ORDER = [
+        { key: "mc", title: "① اختيار واحد (MC)" },
+        { key: "multi", title: "② متعدّد (Multi)" },
+        { key: "gap", title: "③ فراغات منسدلة (Gap)" },
+        { key: "type", title: "④ كتابة حرّة (Type)" },
+        {
+          key: "type",
+          title: "⑤ ترجمة عربي → ألماني",
+          filterCatPrefix: "ترجمة",
+        },
+        {
+          key: "type",
+          title: "⑥ صياغة السؤال (Wen/Was…)",
+          filterCatPrefix: "اصنع سؤال",
+        },
+      ];
+
+      function buildSections() {
+        return SECTION_ORDER.map((sec) => {
+          const all = QUESTIONS.filter((q) => q.type === sec.key);
+          const filtered = sec.filterCatPrefix
+            ? all.filter((q) => (q.cat || "").startsWith(sec.filterCatPrefix))
+            : all.filter(
+                (q) =>
+                  !(q.cat || "").startsWith("ترجمة") &&
+                  !(q.cat || "").startsWith("اصنع سؤال")
+              );
+          return { title: sec.title, key: sec.key, questions: filtered };
+        }).filter((s) => s.questions.length > 0);
+      }
+      const SECTIONS = buildSections();
+
+      /* ========= حالة عامة ========= */
+      let globalAnswered = 0,
+        globalCorrect = 0;
+      let activeSectionIndex = -1;
+      let i = 0,
+        sectionScore = 0;
+
+      // عناصر
+      const secList = document.getElementById("secList");
+      const sectionsCard = document.getElementById("sectionsCard");
+      const quizCard = document.getElementById("quizCard");
+      const globalScoreEl = document.getElementById("globalScore");
+
+      const bar = document.getElementById("bar");
+      const qIndex = document.getElementById("qIndex");
+      const qType = document.getElementById("qType");
+      const promptEl = document.getElementById("prompt");
+      const content = document.getElementById("content");
+      const feedback = document.getElementById("feedback");
+      const checkBtn = document.getElementById("checkBtn");
+      const nextBtn = document.getElementById("nextBtn");
+      const exitBtn = document.getElementById("exitBtn");
+      const catPill = document.getElementById("catPill");
+
+      function updateGlobal() {
+        globalScoreEl.textContent = `النتيجة الإجمالية: ${globalCorrect} / ${globalAnswered}`;
+      }
+
+      function renderSectionsList() {
+        secList.innerHTML = "";
+        SECTIONS.forEach((sec, idx) => {
+          const total = sec.questions.length;
+          const card = document.createElement("div");
+          card.className = "sec-card";
+
+          const left = document.createElement("div");
+          left.className = "sec-left";
+          const title = document.createElement("div");
+          title.className = "sec-title";
+          title.textContent = sec.title;
+          const meta = document.createElement("div");
+          meta.className = "sec-meta";
+          meta.textContent = `عدد الأسئلة: ${total}`;
+          left.appendChild(title);
+          left.appendChild(meta);
+
+          const start = document.createElement("button");
+          start.className = "start-btn";
+          start.textContent = "ابدأ هذا القسم";
+          start.onclick = () => startSection(idx);
+
+          card.appendChild(left);
+          card.appendChild(start);
+          secList.appendChild(card);
+        });
+      }
+
+      function startSection(secIdx) {
+        activeSectionIndex = secIdx;
+        i = 0;
+        sectionScore = 0;
+        sectionsCard.style.display = "none";
+        quizCard.style.display = "block";
+        renderQuestion();
+      }
+
+      function exitSection() {
+        activeSectionIndex = -1;
+        quizCard.style.display = "none";
+        sectionsCard.style.display = "block";
+        renderSectionsList();
+      }
+
+      function renderQuestion() {
+        const sec = SECTIONS[activeSectionIndex];
+        const q = sec.questions[i];
+
+        feedback.innerHTML = "";
+        nextBtn.disabled = true;
+        checkBtn.disabled = false;
+
+        qIndex.textContent = `سؤال ${i + 1} / ${sec.questions.length}`;
+        qType.textContent =
+          q.type === "mc"
+            ? "اختيار من متعدد"
+            : q.type === "multi"
+            ? "أسئلة متعددة"
+            : q.type === "gap"
+            ? "إكمال الفراغات"
+            : q.cat && q.cat.startsWith("ترجمة")
+            ? "ترجمة كتابة"
+            : q.cat && q.cat.startsWith("اصنع سؤال")
+            ? "صياغة سؤال"
+            : "اكتب الجواب";
+        catPill.textContent = q.cat || "—";
+        promptEl.innerHTML = q.prompt;
+        content.innerHTML = "";
+
+        bar.style.width = `${(i / sec.questions.length) * 100}%`;
+
+        if (q.type === "mc") {
+          const wrap = document.createElement("div");
+          wrap.className = "choices";
+          q.choices.forEach((c, ix) => {
+            const b = document.createElement("button");
+            b.className = "choice";
+            b.innerHTML = c;
+            b.onclick = () => {
+              [...wrap.children].forEach((x) => x.classList.remove("selected"));
+              b.classList.add("selected");
+            };
+            wrap.appendChild(b);
+          });
+          content.appendChild(wrap);
+        }
+
+        if (q.type === "multi") {
+          const wrap = document.createElement("div");
+          wrap.className = "choices";
+          q.choices.forEach((c) => {
+            const b = document.createElement("button");
+            b.className = "choice";
+            b.innerHTML = c;
+            b.onclick = () => b.classList.toggle("selected");
+            wrap.appendChild(b);
+          });
+          content.appendChild(wrap);
+        }
+
+        if (q.type === "gap") {
+          const gl = document.createElement("div");
+          gl.className = "gap-line";
+          q.segments.forEach((seg, ix) => {
+            gl.insertAdjacentHTML("beforeend", seg);
+            if (ix < q.options.length) {
+              const s = document.createElement("select");
+              s.className = "gap";
+              q.options[ix].forEach((opt) => {
+                const o = document.createElement("option");
+                o.value = opt;
+                o.textContent = opt;
+                s.appendChild(o);
+              });
+              gl.appendChild(s);
+            }
+          });
+          content.appendChild(gl);
+        }
+
+        if (q.type === "type") {
+          const box = document.createElement("div");
+          box.className = "type-wrap";
+          const inp = document.createElement("input");
+          inp.type = "text";
+          inp.className = "type-input";
+          inp.placeholder = q.placeholder || "اكتب الجواب هنا...";
+          inp.autocomplete = "off";
+          inp.spellcheck = false;
+          box.appendChild(inp);
+          content.appendChild(box);
+          if (q.note) {
+            const note = document.createElement("div");
+            note.className = "hint";
+            note.innerHTML = q.note;
+            content.appendChild(note);
+          }
+        }
+      }
+
+      function getUserAnswer(q) {
+        if (q.type === "mc") {
+          const sel = content.querySelector(".choice.selected");
+          return sel
+            ? [...content.querySelectorAll(".choice")].indexOf(sel)
+            : null;
+        }
+        if (q.type === "multi") {
+          return [...content.querySelectorAll(".choice.selected")]
+            .map((btn) => [...content.querySelectorAll(".choice")].indexOf(btn))
+            .sort((a, b) => a - b);
+        }
+        if (q.type === "gap") {
+          return [...content.querySelectorAll("select.gap")].map(
+            (s) => s.value
+          );
+        }
+        if (q.type === "type") {
+          const input = content.querySelector(".type-input");
+          return input ? input.value : "";
+        }
+      }
+
+      document.getElementById("checkBtn").onclick = () => {
+        if (activeSectionIndex < 0) return;
+        const sec = SECTIONS[activeSectionIndex];
+        const q = sec.questions[i];
+        const ua = getUserAnswer(q);
+
+        if (
+          ua === null ||
+          (Array.isArray(ua) && ua.length === 0) ||
+          (q.type === "type" && String(ua).trim() === "")
+        ) {
+          feedback.innerHTML =
+            '<div class="feedback tip">اختر/اكتب إجابة أولاً.</div>';
+          return;
+        }
+
+        let correct = false;
+        if (q.type === "mc") correct = ua === q.answer;
+        if (q.type === "multi") correct = arraysEqual(ua, q.answers);
+        if (q.type === "gap")
+          correct = arraysEqual(
+            ua,
+            q.answer.map((ii, ix) => q.options[ix][ii])
+          );
+        if (q.type === "type") {
+          const accepted = (q.answersText || []).map(normalizeText);
+          const normalized = normalizeText(ua);
+          correct = accepted.includes(normalized);
+        }
+
+        // وسم بصري
+        if (q.type === "mc" || q.type === "multi") {
+          const btns = [...content.querySelectorAll(".choice")];
+          if (q.type === "mc") {
+            btns.forEach((b, ix) => {
+              if (ix === q.answer) b.classList.add("correct");
+              if (ix !== q.answer && b.classList.contains("selected"))
+                b.classList.add("wrong");
+            });
+          } else {
+            btns.forEach((b, ix) => {
+              if ((q.answers || []).includes(ix)) b.classList.add("correct");
+              if (
+                !(q.answers || []).includes(ix) &&
+                b.classList.contains("selected")
+              )
+                b.classList.add("wrong");
+            });
+          }
+        }
+        if (q.type === "gap") {
+          const sels = [...content.querySelectorAll("select.gap")];
+          sels.forEach((s, ix) => {
+            const right = q.options[ix][q.answer[ix]];
+            s.style.borderColor =
+              s.value === right ? "var(--success)" : "var(--danger)";
+          });
+        }
+        if (q.type === "type") {
+          const input = content.querySelector(".type-input");
+          if (input) {
+            input.classList.toggle("ok", correct);
+            input.classList.toggle("bad", !correct);
+          }
+        }
+
+        feedback.innerHTML = `<div class="feedback ${correct ? "ok" : "bad"}">${
+          correct ? "صحيح ✅" : "غير صحيح ❌"
+        } ${q.explain || ""}</div>`;
+        globalAnswered++;
+        if (correct) {
+          globalCorrect++;
+          sectionScore++;
+        }
+        updateGlobal();
+
+        document.getElementById("nextBtn").disabled = false;
+        document.getElementById("checkBtn").disabled = true;
+
+        const last = i === sec.questions.length - 1;
+        document.getElementById("nextBtn").textContent = last
+          ? "إنهاء وعرض نتيجة القسم"
+          : "التالي ⟵";
+      };
+
+      document.getElementById("nextBtn").onclick = () => {
+        const sec = SECTIONS[activeSectionIndex];
+        if (i < sec.questions.length - 1) {
+          i++;
+          renderQuestion();
+          document.getElementById("nextBtn").disabled = true;
+          document.getElementById("bar").style.width = `${
+            (i / sec.questions.length) * 100
+          }%`;
+        } else {
+          // ملخّص القسم
+          const percent = Math.round(
+            (sectionScore / sec.questions.length) * 100
+          );
+          document.getElementById("quizCard").innerHTML = `
+            <div class="prompt" style="text-align:center;font-size:26px;margin-bottom:8px">${
+              sec.title
+            }</div>
+            <div class="feedback ${
+              percent >= 80 ? "ok" : percent >= 60 ? "tip" : "bad"
+            }" style="font-size:18px;text-align:center">
+              نتيجتك في هذا القسم: <b>${sectionScore}</b> من <b>${
+            sec.questions.length
+          }</b> — (${percent}%)
+            </div>
+            <div class="actions" style="justify-content:center;margin-top:16px">
+              <button class="primary" onclick="(${exitSection.toString()})();">رجوع إلى الأقسام</button>
+            </div>
+          `;
+        }
+      };
+
+      document.getElementById("exitBtn").onclick = () => exitSection();
+
+      // انطلاق
+      function init() {
+        // في الدِسكتوب بيظهر sidebar كعمود؛ بالموبايل كأوفرلاي
+        applySidebarMode();
+        renderSectionsList();
+        updateGlobal();
+      }
+      init();
+    </script>
+  </body>
+</html>

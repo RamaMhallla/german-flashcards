@@ -1,0 +1,1130 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>اختبار أدوات الملكية — Possessivartikel (مُوسّع جدًا)</title>
+
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Tajawal:wght@300;400;500;700&display=swap"
+      rel="stylesheet"
+    />
+
+    <style>
+      :root {
+        --primary: #0ea5e9;
+        --primary-light: #38bdf8;
+        --success: #10b981;
+        --warning: #f59e0b;
+        --danger: #ef4444;
+        --light-bg: #f9fafb;
+        --card-bg: #fff;
+        --text: #1f2937;
+        --text-light: #6b7280;
+        --border: #e5e7eb;
+        --shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1),
+          0 2px 4px -1px rgba(0, 0, 0, 0.06);
+        --sidebar-w: 280px;
+      }
+      * {
+        box-sizing: border-box;
+        margin: 0;
+        padding: 0;
+      }
+      body {
+        font-family: "Tajawal", sans-serif;
+        background: linear-gradient(135deg, #f3f4f6 0%, #e5e7eb 100%);
+      }
+
+      .layout {
+        display: grid;
+        grid-template-columns: var(--sidebar-w) 1fr;
+        min-height: 100vh;
+      }
+      aside {
+        background: #fff;
+        border-inline-end: 1px solid var(--border);
+        padding: 18px;
+        position: sticky;
+        top: 0;
+        height: 100vh;
+        overflow: auto;
+        box-shadow: var(--shadow);
+      }
+      .brand {
+        display: flex;
+        gap: 10px;
+        align-items: center;
+        margin-bottom: 16px;
+      }
+      .logo {
+        width: 38px;
+        height: 38px;
+        border-radius: 10px;
+        background: linear-gradient(
+          135deg,
+          var(--primary-light),
+          var(--primary)
+        );
+        display: grid;
+        place-items: center;
+        color: #fff;
+        font-weight: 700;
+      }
+      .muted {
+        color: var(--text-light);
+        font-size: 13px;
+      }
+      .section {
+        border: 1px solid var(--border);
+        border-radius: 14px;
+        margin-top: 8px;
+      }
+      .section-header {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        padding: 12px 14px;
+        cursor: pointer;
+      }
+      .section-title {
+        color: var(--primary);
+        font-weight: 700;
+      }
+      .section-body {
+        border-top: 1px solid var(--border);
+        padding: 10px;
+      }
+      .slink {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        padding: 10px 12px;
+        border-radius: 10px;
+        text-decoration: none;
+        color: var(--text);
+        border: 1px solid transparent;
+      }
+      .slink:hover {
+        background: #f8fafc;
+        border-color: var(--border);
+      }
+      .active {
+        background: #e0f2fe;
+        border-color: #bae6fd;
+      }
+      .chip {
+        font-size: 12px;
+        background: #e0f2fe;
+        color: #075985;
+        padding: 3px 8px;
+        border-radius: 999px;
+        border: 1px solid #bae6fd;
+      }
+
+      main {
+        padding: 24px;
+      }
+      .app {
+        width: min(1000px, 100%);
+        margin: auto;
+      }
+      .header {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 16px;
+        flex-wrap: wrap;
+        margin-bottom: 18px;
+      }
+      h1 {
+        font-size: clamp(24px, 3.4vw, 36px);
+        color: var(--primary);
+      }
+      .subtitle {
+        color: var(--text-light);
+        max-width: 760px;
+      }
+      .pill {
+        background: #f1f5f9;
+        border: 1px solid var(--border);
+        border-radius: 999px;
+        padding: 6px 12px;
+        color: var(--primary);
+        font-weight: 600;
+      }
+
+      .card {
+        background: var(--card-bg);
+        border-radius: 20px;
+        box-shadow: var(--shadow);
+        padding: 24px;
+        border: 1px solid var(--border);
+      }
+      .toolbar {
+        display: flex;
+        gap: 10px;
+        flex-wrap: wrap;
+        margin-bottom: 12px;
+      }
+      .tag {
+        padding: 8px 12px;
+        border: 1px solid var(--border);
+        border-radius: 999px;
+        background: #fff;
+        cursor: pointer;
+      }
+      .tag.active {
+        background: #e0f2fe;
+        border-color: #bae6fd;
+        color: #075985;
+      }
+      .len {
+        padding: 8px 12px;
+        border: 1px solid var(--border);
+        border-radius: 10px;
+        background: #fff;
+      }
+
+      .q-meta {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        color: var(--text-light);
+        margin-bottom: 12px;
+      }
+      .q-index {
+        padding: 6px 14px;
+        border-radius: 999px;
+        background: #f1f5f9;
+        color: var(--primary);
+        font-weight: 700;
+      }
+      .q-type {
+        font-size: 14px;
+        color: var(--primary);
+        background: #e0f2fe;
+        padding: 4px 12px;
+        border-radius: 999px;
+        border: 1px solid var(--border);
+      }
+      .progress {
+        height: 12px;
+        background: #f3f4f6;
+        border-radius: 999px;
+        overflow: hidden;
+        margin: 10px 0 18px;
+      }
+      .progress > span {
+        display: block;
+        height: 100%;
+        width: 0%;
+        background: linear-gradient(
+          90deg,
+          var(--primary-light),
+          var(--primary)
+        );
+        transition: width 0.35s ease;
+      }
+
+      .prompt {
+        font-size: clamp(18px, 2.7vw, 24px);
+        margin: 8px 0 16px;
+      }
+      .de {
+        direction: ltr;
+        unicode-bidi: plaintext;
+        background: #f8fafc;
+        padding: 4px 10px;
+        border-radius: 8px;
+        border: 1px solid var(--border);
+        display: inline-block;
+        font-family: monospace;
+      }
+
+      .choices {
+        display: grid;
+        gap: 12px;
+      }
+      .choice {
+        padding: 14px 16px;
+        border-radius: 14px;
+        background: #f8fafc;
+        border: 2px solid var(--border);
+        cursor: pointer;
+      }
+      .choice:hover {
+        background: #e0f2fe;
+        border-color: #bae6fd;
+      }
+      .choice.selected {
+        background: #bae6fd;
+        border-color: var(--primary);
+      }
+      .choice.correct {
+        border-color: var(--success);
+        background: rgba(16, 185, 129, 0.1);
+      }
+      .choice.wrong {
+        border-color: var(--danger);
+        background: rgba(239, 68, 68, 0.1);
+      }
+
+      .gap-line {
+        display: flex;
+        flex-wrap: wrap;
+        align-items: center;
+        gap: 8px;
+      }
+      select.gap {
+        padding: 10px 14px;
+        border-radius: 10px;
+        background: #f8fafc;
+        border: 2px solid var(--border);
+        min-width: 110px;
+      }
+      .actions {
+        display: flex;
+        gap: 10px;
+        margin-top: 16px;
+        flex-wrap: wrap;
+      }
+      button {
+        all: unset;
+        padding: 12px 18px;
+        border-radius: 12px;
+        cursor: pointer;
+        font-weight: 700;
+      }
+      .primary {
+        background: linear-gradient(
+          90deg,
+          var(--primary),
+          var(--primary-light)
+        );
+        color: #fff;
+      }
+      .ghost {
+        border: 2px solid var(--border);
+        background: #fff;
+      }
+      .feedback {
+        margin-top: 12px;
+        padding: 12px;
+        border-radius: 12px;
+        border: 1px solid;
+      }
+      .ok {
+        background: rgba(16, 185, 129, 0.1);
+        border-color: var(--success);
+        color: #065f46;
+      }
+      .bad {
+        background: rgba(239, 68, 68, 0.1);
+        border-color: var(--danger);
+        color: #991b1b;
+      }
+      .tip {
+        background: rgba(245, 158, 11, 0.1);
+        border-color: var(--warning);
+        color: #92400e;
+      }
+
+      @media (max-width: 900px) {
+        .layout {
+          grid-template-columns: 1fr;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <div class="layout">
+      <div id="sidebar"></div>
+      <main>
+        <div class="app">
+          <div class="header">
+            <div>
+              <h1>Possessivartikel — بنك أسئلة ضخم</h1>
+              <div class="subtitle">
+                يشمل <b>mein/dein/sein/ihr/sein/unser/euer/ihr/Ihr</b> في
+                <b>Nominativ / Akkusativ / Dativ</b>، مع حالات خاصة:
+                <span class="de">euer → euren/eurem/eurer</span> و
+                <span class="de">Dativ Pl. + -n</span> وصيغة الاحترام
+                <span class="de">Ihr</span>.
+              </div>
+            </div>
+            <div class="pill" id="scorePill">النتيجة: 0 / 0</div>
+          </div>
+
+          <div
+            class="toolbar card"
+            style="
+              display: flex;
+              align-items: center;
+              justify-content: space-between;
+            "
+          >
+            <div
+              style="
+                display: flex;
+                gap: 8px;
+                flex-wrap: wrap;
+                align-items: center;
+              "
+            >
+              <button class="tag active" data-filter="all">الكل</button>
+              <button class="tag" data-filter="MC">اختيار واحد</button>
+              <button class="tag" data-filter="GAP">فراغات</button>
+              <button class="tag" data-filter="TYPE">كتابة/ترجمة</button>
+            </div>
+            <div style="display: flex; gap: 8px; align-items: center">
+              <span class="muted">طول الاختبار:</span>
+              <select id="lenSel" class="len">
+                <option value="10">10</option>
+                <option value="20" selected>20</option>
+                <option value="30">30</option>
+                <option value="all">الكل</option>
+              </select>
+              <button class="tag" id="reshuffle">🔁 عشوائي</button>
+            </div>
+          </div>
+
+          <div class="card" id="quizCard">
+            <div class="q-meta">
+              <div class="q-index" id="qIndex">سؤال 1 / ?</div>
+              <div class="q-type" id="qType"></div>
+            </div>
+            <div class="progress"><span id="bar"></span></div>
+            <div class="prompt" id="prompt"></div>
+            <div id="content"></div>
+            <div class="actions">
+              <button class="primary" id="checkBtn">تحقّق</button>
+              <button class="ghost" id="nextBtn" disabled>التالي ⟵</button>
+              <button class="ghost" id="restartBtn">إعادة البدء</button>
+            </div>
+            <div id="feedback"></div>
+            <div class="pill" id="catPill" style="margin-top: 10px">—</div>
+          </div>
+
+          <details class="card" style="margin-top: 16px">
+            <summary style="cursor: pointer; color: #0ea5e9; font-weight: 700">
+              📌 تذكير سريع
+            </summary>
+            <div style="margin-top: 8px">
+              <div class="de">Nom: mein, deine, unser … (المؤنث/الجمع +e)</div>
+              <div class="de">
+                Akk (m): meinen, deinen, seinen, ihren, unseren, euren
+              </div>
+              <div class="de">
+                Dat (m/n): meinem, deinem, seinem … · Dat (f): meiner · Dat
+                (Pl): meinen Kindern (+ -n)
+              </div>
+              <div class="de">
+                euer → eure/euren/eurem/eurer · Ihr (احترام) بحرف كبير دائمًا
+              </div>
+            </div>
+          </details>
+        </div>
+      </main>
+    </div>
+
+    <script>
+      // ===== Helpers =====
+      const norm = (s) =>
+        String(s || "")
+          .toLowerCase()
+          .replace(/[?.!،,:;]+$/, "")
+          .replace(/\s+/g, " ")
+          .trim();
+      const arraysEqual = (a, b) =>
+        Array.isArray(a) &&
+        Array.isArray(b) &&
+        a.length === b.length &&
+        a.every((v, i) => v === b[i]);
+      const shuffle = (arr) =>
+        arr
+          .map((v) => [Math.random(), v])
+          .sort((a, b) => a[0] - b[0])
+          .map((x) => x[1]);
+      const sample = (arr, n) =>
+        n >= arr.length ? [...arr] : shuffle(arr).slice(0, n);
+
+      // ===== Huge Question Bank (70+) =====
+      // group: MC / GAP / TYPE
+      const Q = [];
+
+      // --- MC: Nominativ ---
+      Q.push(
+        {
+          group: "MC",
+          type: "mc",
+          cat: "Nom (m)",
+          prompt: `أكمل: <span class="de">Das ist ___ Vater.</span> (ich)`,
+          choices: ["mein", "meinen", "meinem"],
+          answer: 0,
+          explain: "Nom مذكر: mein Vater.",
+        },
+        {
+          group: "MC",
+          type: "mc",
+          cat: "Nom (f)",
+          prompt: `أكمل: <span class="de">Ist das ___ Mutter?</span> (du)`,
+          choices: ["dein", "deine", "deinen"],
+          answer: 1,
+          explain: "deine Mutter.",
+        },
+        {
+          group: "MC",
+          type: "mc",
+          cat: "Nom (n)",
+          prompt: `أكمل: <span class="de">Das ist ___ Haus.</span> (sie)`,
+          choices: ["ihr", "ihre", "ihren"],
+          answer: 0,
+          explain: "ihr Haus.",
+        },
+        {
+          group: "MC",
+          type: "mc",
+          cat: "Nom (Pl.)",
+          prompt: `أكمل: <span class="de">Das sind ___ Bücher.</span> (wir)`,
+          choices: ["unser", "unsere", "unseren"],
+          answer: 1,
+          explain: "unsere Bücher.",
+        },
+        {
+          group: "MC",
+          type: "mc",
+          cat: "Nom (Ihr)",
+          prompt: `اختر: <span class="de">Ist das ___ Termin, Herr Ali?</span>`,
+          choices: ["Ihr", "Ihre", "Ihrem"],
+          answer: 0,
+          explain: "Termin مذكّر ⇒ Ihr Termin.",
+        },
+        {
+          group: "MC",
+          type: "mc",
+          cat: "Nom (euer)",
+          prompt: `أكمل: <span class="de">Ist das ___ Sohn?</span> (ihr)`,
+          choices: ["euer", "euren", "eurem"],
+          answer: 0,
+          explain: "Nom مذكر: euer Sohn.",
+        },
+        {
+          group: "MC",
+          type: "mc",
+          cat: "Nom (gemischt)",
+          prompt: `أكمل: <span class="de">___ Schwester ist nett.</span> (er)`,
+          choices: ["Sein", "Seine", "Seinen"],
+          answer: 1,
+          explain: "Nom مؤنث: seine Schwester.",
+        }
+      );
+
+      // --- MC: Akkusativ ---
+      Q.push(
+        {
+          group: "MC",
+          type: "mc",
+          cat: "Akk (m)",
+          prompt: `أكمل: <span class="de">Ich sehe ___ Bruder.</span> (du)`,
+          choices: ["dein", "deinen", "deinem"],
+          answer: 1,
+          explain: "deinen Bruder.",
+        },
+        {
+          group: "MC",
+          type: "mc",
+          cat: "Akk (f)",
+          prompt: `أكمل: <span class="de">Er besucht ___ Tante.</span> (sie)`,
+          choices: ["ihr", "ihre", "ihren"],
+          answer: 1,
+          explain: "ihre Tante.",
+        },
+        {
+          group: "MC",
+          type: "mc",
+          cat: "Akk (n)",
+          prompt: `أكمل: <span class="de">Wir kaufen ___ Auto.</span> (ich)`,
+          choices: ["mein", "meinen", "meinem"],
+          answer: 0,
+          explain: "mein Auto.",
+        },
+        {
+          group: "MC",
+          type: "mc",
+          cat: "Akk (Pl.)",
+          prompt: `أكمل: <span class="de">Sie hat ___ Kinder gern.</span> (wir)`,
+          choices: ["unsere", "unseren", "unserem"],
+          answer: 0,
+          explain: "unsere Kinder.",
+        },
+        {
+          group: "MC",
+          type: "mc",
+          cat: "Akk (euer)",
+          prompt: `أكمل: <span class="de">Ich kenne ___ Onkel.</span> (ihr)`,
+          choices: ["eure", "euren", "eurem"],
+          answer: 1,
+          explain: "euren Onkel.",
+        },
+        {
+          group: "MC",
+          type: "mc",
+          cat: "Akk (sein/ihr)",
+          prompt: `اختر: <span class="de">Sie liebt ___ Mann.</span> (ihr)`,
+          choices: ["ihr", "ihren", "ihrem"],
+          answer: 1,
+          explain: "ihren Mann.",
+        },
+        {
+          group: "MC",
+          type: "mc",
+          cat: "Akk (mein/dein)",
+          prompt: `اختر: <span class="de">Magst du ___ Hund?</span> (ich)`,
+          choices: ["mein", "meinen", "meinem"],
+          answer: 1,
+          explain: "meinen Hund.",
+        }
+      );
+
+      // --- MC: Dativ ---
+      Q.push(
+        {
+          group: "MC",
+          type: "mc",
+          cat: "Dat (m/n)",
+          prompt: `أكمل: <span class="de">Ich helfe ___ Freund.</span> (er)`,
+          choices: ["seinem", "seinen", "seiner"],
+          answer: 0,
+          explain: "seinem Freund.",
+        },
+        {
+          group: "MC",
+          type: "mc",
+          cat: "Dat (f)",
+          prompt: `أكمل: <span class="de">Wir danken ___ Lehrerin.</span> (du)`,
+          choices: ["deiner", "deinem", "deinen"],
+          answer: 0,
+          explain: "deiner Lehrerin.",
+        },
+        {
+          group: "MC",
+          type: "mc",
+          cat: "Dat (Pl + -n)",
+          prompt: `أكمل: <span class="de">Er gibt ___ Kindern Geld.</span> (wir)`,
+          choices: ["unseren", "unsere", "unserem"],
+          answer: 0,
+          explain: "unseren Kindern (+n).",
+        },
+        {
+          group: "MC",
+          type: "mc",
+          cat: "Dat (euer)",
+          prompt: `اختر: <span class="de">Ich spreche mit ___ Vater.</span> (ihr)`,
+          choices: ["eurer", "eurem", "euren"],
+          answer: 1,
+          explain: "eurem Vater.",
+        },
+        {
+          group: "MC",
+          type: "mc",
+          cat: "Dat (Ihr)",
+          prompt: `اختر: <span class="de">Kann ich ___ Tochter helfen, Frau Noor?</span>`,
+          choices: ["Ihrer", "Ihren", "Ihrem"],
+          answer: 0,
+          explain: "Ihrer Tochter.",
+        },
+        {
+          group: "MC",
+          type: "mc",
+          cat: "Dat (gemischt)",
+          prompt: `اختر: <span class="de">Sie gratulieren ___ Schwester.</span> (wir)`,
+          choices: ["unserer", "unserem", "unseren"],
+          answer: 0,
+          explain: "unserer Schwester.",
+        }
+      );
+
+      // --- GAP: بسيطة ومركبة ---
+      const GAP = [
+        {
+          cat: "Gap Akk m",
+          seg: ['<span class="de">Ich besuche ', " Onkel.</span> (sie)"],
+          opt: [["ihr", "ihren", "ihrem"]],
+          ans: [1],
+        },
+        {
+          cat: "Gap Dat f",
+          seg: ['<span class="de">Er hilft ', " Mutter.</span> (du)"],
+          opt: [["deiner", "deinem", "deinen"]],
+          ans: [0],
+        },
+        {
+          cat: "Gap Dat Pl",
+          seg: ['<span class="de">Wir schreiben ', " Freunden.</span> (ich)"],
+          opt: [["meine", "meinen", "meinem"]],
+          ans: [1],
+        },
+        {
+          cat: "Gap Nom Pl",
+          seg: ['<span class="de">Das sind ', " Schuhe.</span> (ihr)"],
+          opt: [["euer", "eure", "euren"]],
+          ans: [1],
+        },
+        {
+          cat: "Gap euer Dat",
+          seg: ['<span class="de">Ich gratuliere ', " Bruder.</span> (ihr)"],
+          opt: [["eurer", "eurem", "euren"]],
+          ans: [1],
+        },
+        {
+          cat: "Gap Ihr Akk",
+          seg: ['<span class="de">Ist das ', " Pass, Herr Omar?</span>"],
+          opt: [["Ihr", "Ihren", "Ihrem"]],
+          ans: [1],
+        },
+        {
+          cat: "Gap Mix",
+          seg: [
+            '<span class="de">Sie liebt ',
+            " Kinder und hilft ",
+            " Kindern.</span> (wir)",
+          ],
+          opt: [
+            ["unsere", "unseren"],
+            ["unsere", "unseren"],
+          ],
+          ans: [0, 1],
+        },
+        {
+          cat: "Gap m/n Dat",
+          seg: [
+            '<span class="de">Ich wohne mit ',
+            " Onkel und in ",
+            " Haus.</span> (er)",
+          ],
+          opt: [
+            ["seinem", "seinen", "seiner"],
+            ["seinem", "seinen", "seiner"],
+          ],
+          ans: [0, 0],
+        },
+        {
+          cat: "Gap Akk n",
+          seg: ['<span class="de">Kaufst du ', " Handy?</span> (ich)"],
+          opt: [["mein", "meinen", "meinem"]],
+          ans: [0],
+        },
+        {
+          cat: "Gap Dat + Pl -n",
+          seg: [
+            '<span class="de">Der Lehrer erklärt ',
+            " Schülern die Regel.</span> (sie)</span>",
+          ],
+          opt: [["ihren", "ihrem", "ihre"]],
+          ans: [0],
+        },
+      ];
+      GAP.forEach((g) =>
+        Q.push({
+          group: "GAP",
+          type: "gap",
+          cat: g.cat,
+          prompt: "أكمل:",
+          segments: g.seg,
+          options: g.opt,
+          answer: g.ans,
+          explain: "",
+        })
+      );
+
+      // --- TYPE: كتابة / تحويل / ترجمة ---
+      const TYPE = [
+        {
+          cat: "Type Akk m",
+          prompt: `حوّل داخل القوس: <span class="de">Ich sehe <b>(dein) Bruder</b>.</span>`,
+          ok: ["deinen bruder"],
+        },
+        {
+          cat: "Type Dat f",
+          prompt: `اكتب: <span class="de">Wir helfen <b>(ihr) Schwester</b>.</span>`,
+          ok: ["ihrer schwester"],
+        },
+        {
+          cat: "Type Dat Pl",
+          prompt: `اكتب: <span class="de">Er gibt <b>(unser) Kindern</b> Geld.</span>`,
+          ok: ["unseren kindern"],
+        },
+        {
+          cat: "Type euer mix",
+          prompt: `اكتب: <span class="de">Ich spreche mit <b>(euer) Lehrer</b>.</span>`,
+          ok: ["eurem lehrer"],
+        },
+        {
+          cat: "Type Ihr",
+          prompt: `اكتب بأسلوب الاحترام: <span class="de">Wo ist <b>(Ihr) Auto</b>, Frau Sara?</span>`,
+          ok: ["ihr auto"],
+        },
+        {
+          cat: "ترجمة 1",
+          prompt: `ترجم: <b>هذه حقيبتنا.</b>`,
+          ok: ["das ist unsere tasche"],
+        },
+        {
+          cat: "ترجمة 2",
+          prompt: `ترجم: <b>أحب صديقكِ.</b>`,
+          ok: ["ich liebe deinen freund", "ich liebe deinen freund."],
+        },
+        {
+          cat: "ترجمة 3",
+          prompt: `ترجم: <b>نساعد أخاهم.</b>`,
+          ok: ["wir helfen ihrem bruder"],
+        },
+        {
+          cat: "ترجمة 4",
+          prompt: `ترجم: <b>أعطي أولادكم كتابًا.</b>`,
+          ok: [
+            "ich gebe euren kindern ein buch",
+            "ich gebe euren kindern ein buch.",
+          ],
+        },
+        {
+          cat: "ترجمة 5",
+          prompt: `ترجم: <b>هل هذا دفتر حضرتكم؟</b>`,
+          ok: ["ist das ihr heft", "ist das ihr heft?"],
+        },
+        {
+          cat: "Type Nom Pl",
+          prompt: `اكتب: <span class="de">Das sind <b>(mein) Bücher</b>.</span>`,
+          ok: ["meine bücher", "meine buecher"],
+        },
+        {
+          cat: "Type Akk n",
+          prompt: `اكتب: <span class="de">Er verkauft <b>(sein) Haus</b>.</span>`,
+          ok: ["sein haus"],
+        },
+      ];
+      TYPE.forEach((t) =>
+        Q.push({
+          group: "TYPE",
+          type: "type",
+          cat: t.cat,
+          prompt: t.prompt,
+          placeholder: "اكتب الجواب...",
+          answersText: t.ok,
+        })
+      );
+
+      // لزيادة العدد (70+): نكرر أنماطًا بمتغيرات مختلفة
+      const EXTRA_MC = [
+        [
+          "Nom f",
+          "___ Tochter ist klein. (wir)",
+          ["unser", "unsere", "unseren"],
+          1,
+        ],
+        [
+          "Akk m",
+          "Ich suche ___ Schlüssel. (sie)",
+          ["ihr", "ihren", "ihrem"],
+          1,
+        ],
+        [
+          "Dat n",
+          "Er hilft mit ___ Kind. (ich)",
+          ["meinem", "meinen", "meiner"],
+          0,
+        ],
+        [
+          "Akk Pl",
+          "Wir mögen ___ Nachbarn. (ihr)",
+          ["eure", "euren", "eurem"],
+          0,
+        ],
+        ["Nom n", "Ist das ___ Zimmer? (du)", ["dein", "deine", "deinen"], 0],
+        [
+          "Dat f",
+          "Sie arbeitet mit ___ Kollegin. (er)",
+          ["seiner", "seinem", "seinen"],
+          0,
+        ],
+        [
+          "Akk m",
+          "Kennst du ___ Lehrer? (wir)",
+          ["unser", "unseren", "unserem"],
+          1,
+        ],
+        [
+          "Dat Pl",
+          "Ich schreibe ___ Eltern. (du)",
+          ["deinen", "deiner", "deinem"],
+          0,
+        ],
+        [
+          "Akk f",
+          "Ich besuche ___ Schwester. (ihr)",
+          ["eure", "euren", "eurem"],
+          0,
+        ],
+        [
+          "Ihr Akk f",
+          "Ich sehe ___ Tasche, Frau Amina. (Ihr)",
+          ["Ihr", "Ihre", "Ihren"],
+          1,
+        ],
+      ];
+      EXTRA_MC.forEach((x) =>
+        Q.push({
+          group: "MC",
+          type: "mc",
+          cat: x[0],
+          prompt: `أكمل: <span class="de">${x[1]}</span>`,
+          choices: x[2],
+          answer: x[3],
+        })
+      );
+
+      // ===== UI State =====
+      let FILTER = "all",
+        LENGTH = 20,
+        QUESTIONS = [],
+        idx = 0,
+        score = 0,
+        checked = false;
+      const bar = document.getElementById("bar");
+      const qIndex = document.getElementById("qIndex");
+      const qType = document.getElementById("qType");
+      const promptEl = document.getElementById("prompt");
+      const content = document.getElementById("content");
+      const feedback = document.getElementById("feedback");
+      const checkBtn = document.getElementById("checkBtn");
+      const nextBtn = document.getElementById("nextBtn");
+      const restartBtn = document.getElementById("restartBtn");
+      const scorePill = document.getElementById("scorePill");
+      const catPill = document.getElementById("catPill");
+
+      // فلاتر
+      document.querySelectorAll(".tag[data-filter]").forEach((b) => {
+        b.onclick = () => {
+          document
+            .querySelectorAll(".tag[data-filter]")
+            .forEach((x) => x.classList.remove("active"));
+          b.classList.add("active");
+          FILTER = b.dataset.filter;
+          startQuiz(true);
+        };
+      });
+      document.getElementById("lenSel").onchange = (e) => {
+        LENGTH = e.target.value === "all" ? "all" : parseInt(e.target.value);
+        startQuiz(true);
+      };
+      document.getElementById("reshuffle").onclick = () => startQuiz(true);
+
+      function byFilter() {
+        if (FILTER === "all") return [...Q];
+        return Q.filter((q) => q.group === FILTER);
+      }
+      function pickLength(arr) {
+        if (LENGTH === "all") return shuffle(arr);
+        return sample(arr, LENGTH);
+      }
+
+      function startQuiz(reshuf = false) {
+        const pool = byFilter();
+        QUESTIONS = pickLength(pool);
+        idx = 0;
+        score = 0;
+        render();
+      }
+
+      function render() {
+        const q = QUESTIONS[idx];
+        checked = false;
+        feedback.innerHTML = "";
+        nextBtn.disabled = true;
+        checkBtn.disabled = false;
+        qIndex.textContent = `سؤال ${idx + 1} / ${QUESTIONS.length}`;
+        qType.textContent =
+          q.type === "mc"
+            ? "اختيار من متعدد"
+            : q.type === "gap"
+            ? "إكمال الفراغات"
+            : q.cat?.includes("ترجم")
+            ? "ترجمة كتابة"
+            : "اكتب الجواب";
+        catPill.textContent = q.cat || "—";
+        promptEl.innerHTML = q.prompt;
+        content.innerHTML = "";
+        bar.style.width = `${(idx / QUESTIONS.length) * 100}%`;
+        scorePill.textContent = `النتيجة: ${score} / ${idx}`;
+
+        if (q.type === "mc") {
+          const wrap = document.createElement("div");
+          wrap.className = "choices";
+          q.choices.forEach((c, i) => {
+            const b = document.createElement("button");
+            b.className = "choice";
+            b.innerHTML = c;
+            b.onclick = () => {
+              [...wrap.children].forEach((x) => x.classList.remove("selected"));
+              b.classList.add("selected");
+            };
+            wrap.appendChild(b);
+          });
+          content.appendChild(wrap);
+        }
+        if (q.type === "gap") {
+          const gl = document.createElement("div");
+          gl.className = "gap-line";
+          q.segments.forEach((seg, i) => {
+            gl.insertAdjacentHTML("beforeend", seg);
+            if (i < q.options.length) {
+              const s = document.createElement("select");
+              s.className = "gap";
+              q.options[i].forEach((opt) => {
+                const o = document.createElement("option");
+                o.value = opt;
+                o.textContent = opt;
+                s.appendChild(o);
+              });
+              gl.appendChild(s);
+            }
+          });
+          content.appendChild(gl);
+        }
+        if (q.type === "type") {
+          const input = document.createElement("input");
+          input.type = "text";
+          input.placeholder = q.placeholder || "اكتب الجواب...";
+          input.style.padding = "12px 14px";
+          input.style.border = "2px solid var(--border)";
+          input.style.borderRadius = "12px";
+          input.style.minWidth = "300px";
+          input.autocomplete = "off";
+          input.spellcheck = false;
+          content.appendChild(input);
+        }
+      }
+
+      function getUA(q) {
+        if (q.type === "mc") {
+          const sel = content.querySelector(".choice.selected");
+          return sel
+            ? [...content.querySelectorAll(".choice")].indexOf(sel)
+            : null;
+        }
+        if (q.type === "gap") {
+          return [...content.querySelectorAll("select.gap")].map(
+            (s) => s.value
+          );
+        }
+        if (q.type === "type") {
+          const inp = content.querySelector("input");
+          return inp ? inp.value : "";
+        }
+      }
+
+      checkBtn.onclick = () => {
+        if (checked) return;
+        const q = QUESTIONS[idx];
+        const ua = getUA(q);
+        if (
+          ua === null ||
+          (Array.isArray(ua) && ua.length === 0) ||
+          (q.type === "type" && String(ua).trim() === "")
+        ) {
+          feedback.innerHTML =
+            '<div class="feedback tip">اختر/اكتب إجابة أولًا.</div>';
+          return;
+        }
+        checked = true;
+        nextBtn.disabled = false;
+        checkBtn.disabled = true;
+
+        let correct = false;
+        if (q.type === "mc") correct = ua === q.answer;
+        if (q.type === "gap")
+          correct = arraysEqual(
+            ua,
+            q.answer.map((ii, i) => q.options[i][ii])
+          );
+        if (q.type === "type")
+          correct = (q.answersText || []).map(norm).includes(norm(ua));
+
+        if (q.type === "mc") {
+          const btns = [...content.querySelectorAll(".choice")];
+          btns.forEach((b, i) => {
+            if (i === q.answer) b.classList.add("correct");
+            if (i !== q.answer && b.classList.contains("selected"))
+              b.classList.add("wrong");
+          });
+        }
+        if (q.type === "gap") {
+          const sels = [...content.querySelectorAll("select.gap")];
+          sels.forEach((s, i) => {
+            const right = q.options[i][q.answer[i]];
+            s.style.borderColor =
+              s.value === right ? "var(--success)" : "var(--danger)";
+          });
+        }
+        if (q.type === "type") {
+          const inp = content.querySelector("input");
+          if (inp)
+            inp.style.borderColor = correct
+              ? "var(--success)"
+              : "var(--danger)";
+        }
+
+        feedback.innerHTML = `<div class="feedback ${correct ? "ok" : "bad"}">${
+          correct ? "صحيح ✅" : "غير صحيح ❌"
+        } ${q.explain || ""}</div>`;
+        if (correct) score++;
+        bar.style.width = `${((idx + 1) / QUESTIONS.length) * 100}%`;
+        scorePill.textContent = `النتيجة: ${score} / ${idx + 1}`;
+        if (idx === QUESTIONS.length - 1) nextBtn.textContent = "عرض النتيجة";
+      };
+
+      nextBtn.onclick = () => {
+        if (idx < QUESTIONS.length - 1) {
+          idx++;
+          nextBtn.disabled = true;
+          nextBtn.textContent = "التالي ⟵";
+          render();
+        } else {
+          const p = Math.round((score / QUESTIONS.length) * 100);
+          document.getElementById("quizCard").innerHTML = `
+        <div class="prompt" style="text-align:center;font-size:26px">انتهى الاختبار ✅</div>
+        <div class="feedback ${
+          p >= 80 ? "ok" : p >= 60 ? "tip" : "bad"
+        }" style="text-align:center">نتيجتك: <b>${score}</b> من <b>${
+            QUESTIONS.length
+          }</b> — (${p}%)</div>
+        <div class="actions" style="justify-content:center;margin-top:14px">
+          <button class="primary" onclick="location.reload()">إعادة الاختبار</button>
+        </div>`;
+        }
+      };
+
+      restartBtn.onclick = () => startQuiz();
+      startQuiz();
+    </script>
+    <script>
+      // تحميل محتوى sidebar.html
+      fetch("sidebar.html")
+        .then((res) => res.text())
+        .then((html) => {
+          document.getElementById("sidebar").innerHTML = html;
+
+          // فعّل الرابط الحالي (صفحة مفتوحة)
+          const current = location.pathname.split("/").pop();
+          document.querySelectorAll("#sidebar .slink").forEach((a) => {
+            if (a.getAttribute("href") === current) {
+              a.classList.add("active");
+            }
+          });
+        });
+    </script>
+  </body>
+</html>
