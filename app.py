@@ -1,0 +1,412 @@
+# -*- coding: utf-8 -*-
+"""
+German Flashcards (Deutsch→Arabisch) — Flask single-file app
+
+Run:
+  pip install flask
+  python app.py
+Open: http://127.0.0.1:5000
+"""
+
+from __future__ import annotations
+from flask import Flask, jsonify, Response
+
+app = Flask(__name__)
+
+# ▶️ الكلمات (German → Arabic)
+DEFAULT_DECK = [
+    {"front": "tragen", "back": "لَبِسَ"},
+    {"front": "mädchenhaft", "back": "بَنَاتي؛ كالفتيات"},
+    {"front": "die Spezifikationen des Wagens", "back": "مواصفات السيارة"},
+    {"front": "billig", "back": "رَخِيصٌ"},
+    {"front": "die Ausstattung", "back": "تَجْهِيزات؛ معدات"},
+    {"front": "glücklich", "back": "سَعِيدٌ؛ مبتهج"},
+    {"front": "der Fahrkomfort", "back": "الراحة أثناء القيادة"},
+    {"front": "überleben", "back": "نَجَا؛ البقاء على قيد الحياة"},
+    {"front": "ausprobieren", "back": "جَرَّبَ (لأول مرة)"},
+    {"front": "günstig", "back": "بَخْس؛ رخيص؛ مناسب"},
+    {"front": "es gab", "back": "كان هناك"},
+    {"front": "das Angebot", "back": "عَرْض (اقتصاد)"},
+    {"front": "die Regulierung", "back": "تَنْظِيمٌ"},
+    {"front": "die Öffnungszeiten", "back": "مواعيد العمل"},
+    {"front": "freuen", "back": "فَرِحَ"},
+    {"front": "سich freuen", "back": "انشرح صدره؛ يفرح"},
+    {"front": "treffen", "back": "صَادَف؛ يلتقي"},
+    {"front": "erwachsen", "back": "بالِغٌ"},
+    {"front": "fördern", "back": "دَعَّمَ؛ يعزّز"},
+    {"front": "die Aussprache", "back": "نُطْقٌ"},
+    {"front": "das Sprachgefühl", "back": "الإحساس اللغوي"},
+    {"front": "leichter", "back": "أَيْسَرُ؛ أسهل"},
+    {"front": "begreifen", "back": "اسْتَوْعَب؛ يدرك"},
+]
+
+@app.get("/api/deck")
+def deck_json():
+    return jsonify(DEFAULT_DECK)
+
+@app.get("/")
+def index():
+    return Response(INDEX_HTML, mimetype="text/html")
+
+
+# ملاحظة مهمة: لا نستخدم أي % formatting هنا حتى لا يصير ValueError
+INDEX_HTML = r"""<!doctype html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>بطاقات كلمات ألمانية (Deutsch→Arabisch)</title>
+  <style>
+    :root {
+      --bg-primary: #f8fafc;
+      --bg-secondary: #f1f5f9;
+      --bg-card: #ffffff;
+      --text-primary: #1e293b;
+      --text-secondary: #64748b;
+      --accent-primary: #3b82f6;
+      --accent-secondary: #60a5fa;
+      --accent-success: #10b981;
+      --accent-warning: #f59e0b;
+      --accent-danger: #ef4444;
+      --border-light: #e2e8f0;
+      --shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+      --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+      --transition: all 0.3s ease;
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      background: linear-gradient(135deg, #f0f9ff 0%, #e0f2fe 100%);
+      font-family: system-ui, -apple-system, "Segoe UI", Roboto, Ubuntu, "Noto Sans", Tahoma, Arial;
+      color: var(--text-primary);
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 20px;
+      line-height: 1.6;
+    }
+
+    .app { width: min(1000px, 100%); margin: 0 auto; }
+
+    header {
+      display: flex; gap: 16px; align-items: center; justify-content: space-between;
+      margin-bottom: 24px; flex-wrap: wrap; background: var(--bg-card);
+      padding: 16px 24px; border-radius: 20px; box-shadow: var(--shadow);
+    }
+
+    .title {
+      font-weight: 800; font-size: clamp(20px, 3vw, 28px);
+      color: var(--accent-primary); display: flex; align-items: center; gap: 12px;
+    }
+    .title::before { content: "📚"; font-size: 1.2em; }
+
+    .controls { display: flex; flex-wrap: wrap; gap: 10px; align-items: center; }
+
+    button, .btn {
+      background: var(--bg-card); color: var(--text-primary); border: 1px solid var(--border-light);
+      padding: 10px 16px; border-radius: 12px; cursor: pointer; transition: var(--transition);
+      font-weight: 500; display: flex; align-items: center; gap: 6px; box-shadow: var(--shadow);
+    }
+    button:hover { transform: translateY(-2px); box-shadow: var(--shadow-lg); }
+    button:active { transform: translateY(0); }
+    .accent { background: var(--accent-primary); color: white; border: none; }
+    .accent2 { background: var(--accent-secondary); color: white; border: none; }
+    .success { background: var(--accent-success); color: white; border: none; }
+    .danger { background: var(--accent-danger); color: white; border: none; }
+    .warning { background: var(--accent-warning); color: white; border: none; }
+
+    .wrap { display: grid; gap: 20px; }
+
+    .stats {
+      display: flex; gap: 16px; align-items: center; flex-wrap: wrap; font-size: 15px; color: var(--text-secondary);
+      background: var(--bg-card); padding: 16px 24px; border-radius: 16px; box-shadow: var(--shadow);
+    }
+
+    .progress {
+      height: 10px; background: var(--bg-secondary);
+      border-radius: 999px; overflow: hidden; width: 240px; flex-shrink: 0;
+    }
+    .progress>i {
+      display: block; height: 100%;
+      background: linear-gradient(90deg, var(--accent-primary), var(--accent-secondary));
+      width: 0%; border-radius: 999px; transition: width 0.5s ease;
+    }
+
+    .scene { perspective: 1200px; margin: 16px auto; }
+
+    .card {
+      position: relative; width: min(700px, 96vw); height: 360px; margin-inline: auto;
+      transform-style: preserve-3d; transition: transform 0.6s ease; cursor: pointer;
+    }
+    .card.flipped { transform: rotateY(180deg); }
+
+    .face {
+      position: absolute; inset: 0; background: var(--bg-card);
+      border-radius: 24px; backface-visibility: hidden; display: flex; flex-direction: column;
+      align-items: center; justify-content: center; padding: 32px; text-align: center;
+      box-shadow: var(--shadow-lg); border: 1px solid var(--border-light); overflow: hidden;
+    }
+    .face::before {
+      content: ""; position: absolute; top: 0; left: 0; right: 0; height: 6px;
+      background: linear-gradient(90deg, var(--accent-primary), var(--accent-secondary));
+    }
+    .back { transform: rotateY(180deg); }
+
+    .word { font-size: clamp(28px, 5vw, 44px); font-weight: 800; letter-spacing: 0.4px; margin-bottom: 12px; color: var(--text-primary); }
+    .sub { font-size: clamp(14px, 2vw, 16px); color: var(--text-secondary); display: flex; align-items: center; gap: 8px; }
+
+    .nav { display: flex; gap: 12px; justify-content: center; margin-top: 20px; }
+    .kbd {
+      border: 1px solid var(--border-light); background: var(--bg-secondary);
+      padding: 0.2rem 0.6rem; border-radius: 8px; font-size: 12px; font-weight: 600; box-shadow: 0 2px 0 0 var(--border-light);
+    }
+    .row { display: flex; gap: 12px; align-items: center; justify-content: center; flex-wrap: wrap; }
+
+    dialog {
+      border: none; padding: 0; border-radius: 20px; width: min(700px, 96vw); background: var(--bg-card);
+      color: var(--text-primary); box-shadow: var(--shadow-lg);
+    }
+    dialog::backdrop { background: rgba(0, 0, 0, 0.5); backdrop-filter: blur(4px); }
+    .modal-head { display: flex; align-items: center; justify-content: space-between; padding: 18px 24px; border-bottom: 1px solid var(--border-light); font-weight: 600; font-size: 18px; }
+    .modal-body { padding: 20px 24px; }
+
+    textarea {
+      width: 100%; min-height: 200px; background: var(--bg-secondary); color: var(--text-primary);
+      border: 1px solid var(--border-light); border-radius: 12px; padding: 14px; font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+      resize: vertical; margin: 12px 0; transition: var(--transition);
+    }
+    textarea:focus { outline: none; border-color: var(--accent-primary); box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.2); }
+
+    .hint { font-size: 13px; color: var(--text-secondary); background: var(--bg-secondary); padding: 12px; border-radius: 8px; margin: 12px 0; }
+    .pill { background: var(--bg-secondary); border: 1px solid var(--border-light); padding: 6px 12px; border-radius: 999px; font-size: 13px; display: flex; align-items: center; gap: 6px; }
+    .voice { margin-inline-start: 10px; }
+
+    @media (max-width: 768px) {
+      header { flex-direction: column; align-items: stretch; text-align: center; }
+      .title { justify-content: center; }
+      .controls { justify-content: center; }
+      .stats { flex-direction: column; align-items: stretch; }
+      .progress { width: 100%; }
+    }
+  </style>
+</head>
+<body>
+  <div class="app">
+    <header>
+      <div class="title">بطاقات كلمات ألمانية (Deutsch→Arabisch)</div>
+      <div class="controls">
+        <button id="btnShuffle" class="accent2">🔀 خَلّط</button>
+        <button id="btnImport">📥 استيراد مجموعة</button>
+        <button id="btnReset" class="danger">♻️ تصفير التقدّم</button>
+      </div>
+    </header>
+
+    <div class="wrap">
+      <div class="stats">
+        <span class="pill">✅ المعرفَة: <b id="knownCnt">0</b></span>
+        <span class="pill">❓ غير معروف: <b id="unknownCnt">0</b></span>
+        <span class="pill">📊 البطاقة: <b id="idx">1</b>/<b id="total">1</b></span>
+        <div class="progress" aria-label="progress"><i id="bar"></i></div>
+        <span class="hint">اختصارات: <span class="kbd">Space</span> اقلب، <span class="kbd">←/→</span> التالي/السابق، <span class="kbd">K</span> أعرف، <span class="kbd">U</span> ما بعرف، <span class="kbd">S</span> خَلّط، <span class="kbd">P</span> نطق</span>
+      </div>
+
+      <div class="scene">
+        <div id="card" class="card" role="button" aria-label="flip card">
+          <div class="face front">
+            <div>
+              <div class="word" id="frontWord">—</div>
+              <div class="sub">اضغط لقلب البطاقة <span class="voice"><button id="speakFront" class="btn">🔊 نطق</button></span></div>
+            </div>
+          </div>
+          <div class="face back">
+            <div>
+              <div class="word" id="backWord">—</div>
+              <div class="sub">اضغط للقلب مجددًا <span class="voice"><button id="speakBack" class="btn">🔊 نطق</button></span></div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="nav row">
+        <button id="prev" class="accent2">⟵ السابق</button>
+        <button id="flip" class="accent">↺ اقلب</button>
+        <button id="next" class="accent2">التالي ⟶</button>
+      </div>
+
+      <div class="row">
+        <button id="know" class="success">✅ أعرف (K)</button>
+        <button id="dontKnow" class="warning">❓ ما بعرف (U)</button>
+      </div>
+    </div>
+
+    <dialog id="dlg">
+      <div class="modal-head">
+        <div>📥 استيراد مجموعة كلمات</div>
+        <form method="dialog"><button>✖</button></form>
+      </div>
+      <div class="modal-body">
+        <p class="hint">الصيغة السريعة (سطر لكل بطاقة): <code>Wort – ترجمة</code> أو <code>Wort, ترجمة</code>. مثال:</p>
+        <pre class="hint">billig – رخيص
+Gefahr – خطر
+entwickeln – يطوّر</pre>
+        <textarea id="bulk" placeholder="أدخل الكلمات هنا..."></textarea>
+        <div class="row" style="justify-content: space-between; margin-top:10px">
+          <button id="loadSample">تحميل عيّنة جاهزة</button>
+          <div>
+            <button formmethod="dialog">إلغاء</button>
+            <button id="apply" class="accent">استيراد</button>
+          </div>
+        </div>
+      </div>
+    </dialog>
+  </div>
+
+  <script>
+    // --- Utilities ---
+    const $ = s => document.querySelector(s);
+    const speak = (text) => {
+      try {
+        const u = new SpeechSynthesisUtterance(text);
+        u.lang = 'de-DE';
+        window.speechSynthesis.cancel();
+        window.speechSynthesis.speak(u);
+      } catch(e) { console.warn('TTS not available', e); }
+    };
+
+    const store = {
+      save(key, val){ localStorage.setItem(key, JSON.stringify(val)); },
+      get(key, fallback){ try{ return JSON.parse(localStorage.getItem(key)) ?? fallback }catch{ return fallback } }
+    };
+
+    // --- State ---
+    let deck = [];
+    let idx = 0; // current index
+    let known = new Set(store.get('known', []));
+    let unknown = new Set(store.get('unknown', []));
+
+    function updateCounters(){
+      $('#knownCnt').textContent = known.size;
+      $('#unknownCnt').textContent = unknown.size;
+      $('#idx').textContent = Math.min(deck.length, idx+1);
+      $('#total').textContent = deck.length;
+      const progress = deck.length ? ((idx+1)/deck.length)*100 : 0;
+      $('#bar').style.width = progress + '%';
+    }
+
+    function showCard(){
+      if(!deck.length){
+        $('#frontWord').textContent = '—';
+        $('#backWord').textContent = '—';
+        updateCounters();
+        return;
+      }
+      const {front, back} = deck[idx];
+      $('#frontWord').textContent = front;
+      $('#backWord').textContent = back;
+      $('#card').classList.remove('flipped');
+      updateCounters();
+    }
+
+    function next(){ if(!deck.length) return; idx = (idx + 1) % deck.length; showCard(); }
+    function prev(){ if(!deck.length) return; idx = (idx - 1 + deck.length) % deck.length; showCard(); }
+    function flip(){ $('#card').classList.toggle('flipped'); }
+
+    function shuffle(){
+      for(let i=deck.length-1;i>0;i--){ const j=Math.floor(Math.random()*(i+1)); [deck[i], deck[j]]=[deck[j], deck[i]]; }
+      idx = 0; showCard();
+    }
+
+    function mark(set, other, key){
+      set.add(key); other.delete(key);
+      store.save('known', Array.from(known));
+      store.save('unknown', Array.from(unknown));
+      updateCounters();
+    }
+
+    // --- Events ---
+    $('#card').addEventListener('click', flip);
+    $('#flip').addEventListener('click', flip);
+    $('#next').addEventListener('click', next);
+    $('#prev').addEventListener('click', prev);
+    $('#btnShuffle').addEventListener('click', shuffle);
+    $('#btnReset').addEventListener('click', ()=>{
+      if(confirm("هل أنت متأكد من أنك تريد تصفير التقدم؟ سيتم حذف جميع الإحصائيات.")) {
+        known = new Set();
+        unknown = new Set();
+        store.save('known', []);
+        store.save('unknown', []);
+        updateCounters();
+      }
+    });
+
+    $('#know').addEventListener('click', ()=>{ if(deck.length){ mark(known, unknown, deck[idx].front); next(); }});
+    $('#dontKnow').addEventListener('click', ()=>{ if(deck.length){ mark(unknown, known, deck[idx].front); next(); }});
+
+    $('#speakFront').addEventListener('click', e=>{ e.stopPropagation(); speak($('#frontWord').textContent) });
+    $('#speakBack').addEventListener('click', e=>{ e.stopPropagation(); speak($('#backWord').textContent) });
+
+    document.addEventListener('keydown', (e)=>{
+      if((e.key === ' ' || e.code === 'Space') && !$('#dlg').open){ e.preventDefault(); flip(); }
+      else if(e.key === 'ArrowRight'){ next(); }
+      else if(e.key === 'ArrowLeft'){ prev(); }
+      else if(e.key.toLowerCase() === 's'){ shuffle(); }
+      else if(e.key.toLowerCase() === 'k'){ if(deck.length){ mark(known, unknown, deck[idx].front); next(); } }
+      else if(e.key.toLowerCase() === 'u'){ if(deck.length){ mark(unknown, known, deck[idx].front); next(); } }
+      else if(e.key.toLowerCase() === 'p'){ speak($('#card').classList.contains('flipped')? $('#backWord').textContent : $('#frontWord').textContent); }
+    });
+
+    // --- Import modal ---
+    const dlg = $('#dlg');
+    $('#btnImport').addEventListener('click', ()=>{
+      $('#bulk').value = '';
+      dlg.showModal();
+    });
+
+    $('#apply').addEventListener('click', ()=>{
+      const text = $('#bulk').value.trim();
+      if(!text){
+        alert("يرجى إدخال بعض البيانات أولاً");
+        return;
+      }
+      const lines = text.split(/\n+/).map(l=>l.trim()).filter(Boolean);
+      const arr = [];
+      for(const line of lines){
+        // split by en dash / hyphen / comma variants
+        const parts = line.split(/\s*[–—-]|,\s*/);
+        const front = (parts.shift()||'').trim();
+        const back = parts.join(' ').trim();
+        if(front && back){ arr.push({front, back}); }
+      }
+      if(arr.length){
+        deck = arr; idx = 0; showCard(); dlg.close();
+      } else {
+        alert("لم يتم العثور على أي بطاقات صالحة. يرجى التحقق من التنسيق.");
+      }
+    });
+
+    // زر تحميل عيّنة يملأ من /api/deck
+    $('#loadSample').addEventListener('click', ()=>{
+      fetch('/api/deck').then(r=>r.json()).then(data=>{
+        $('#bulk').value = data.map(x => `${x.front} – ${x.back}`).join('\\n');
+      }).catch(()=>{
+        alert('تعذّر تحميل العيّنة من الخادم.');
+      });
+    });
+
+    // --- Init (ابدأ بتحميل البطاقات من الخادم) ---
+    (function init(){
+      fetch('/api/deck').then(r=>r.json()).then(data=>{
+        deck = data; showCard();
+      }).catch(()=>{
+        alert('تعذّر تحميل مجموعة البطاقات من الخادم.');
+      });
+    })();
+  </script>
+</body>
+</html>
+"""
+
+if __name__ == "__main__":
+    app.run(debug=True)
