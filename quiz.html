@@ -1,0 +1,872 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>B1 — Nominativ / Akkusativ / Dativ — 50 جملة</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Tajawal:wght@400;600;800&display=swap"
+      rel="stylesheet"
+    />
+    <style>
+      :root {
+        --primary: #f43f5e;
+        --border: #e5e7eb;
+        --ok: #10b981;
+        --bad: #ef4444;
+        --muted: #6b7280;
+      }
+      * {
+        box-sizing: border-box;
+      }
+      body {
+        font-family: "Tajawal", system-ui, -apple-system;
+        background: #fafafa;
+        margin: 0;
+        color: #111827;
+      }
+      .wrap {
+        max-width: 980px;
+        margin: auto;
+        padding: 24px;
+      }
+      h1 {
+        margin: 0 0 6px;
+        color: var(--primary);
+        font-weight: 800;
+      }
+      .sub {
+        color: var(--muted);
+        margin-bottom: 18px;
+      }
+      .card {
+        background: #fff;
+        border: 1px solid var(--border);
+        border-radius: 16px;
+        padding: 18px;
+      }
+      .bar {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        margin-bottom: 14px;
+        flex-wrap: wrap;
+      }
+      .score {
+        padding: 6px 12px;
+        border: 1px solid var(--border);
+        border-radius: 999px;
+        font-weight: 700;
+        color: var(--primary);
+      }
+      button {
+        all: unset;
+        background: linear-gradient(90deg, #f43f5e, #fb7185);
+        color: #fff;
+        padding: 10px 14px;
+        border-radius: 12px;
+        cursor: pointer;
+        font-weight: 800;
+      }
+      .ghost {
+        background: #fff;
+        color: #111;
+        border: 2px solid var(--border);
+      }
+      .grid {
+        display: grid;
+        gap: 10px;
+      }
+      .q {
+        display: flex;
+        align-items: flex-start;
+        gap: 10px;
+        padding: 12px;
+        border: 1px solid var(--border);
+        border-radius: 12px;
+        background: #fff;
+      }
+      .num {
+        min-width: 34px;
+        height: 34px;
+        display: grid;
+        place-items: center;
+        font-weight: 800;
+        color: #fff;
+        background: var(--primary);
+        border-radius: 10px;
+      }
+      .de {
+        direction: ltr;
+        unicode-bidi: plaintext;
+      }
+      select {
+        padding: 8px 10px;
+        border: 2px solid var(--border);
+        border-radius: 10px;
+        min-width: 120px;
+      }
+      select.ok {
+        border-color: var(--ok);
+        background: rgba(16, 185, 129, 0.08);
+      }
+      select.bad {
+        border-color: var(--bad);
+        background: rgba(239, 68, 68, 0.08);
+      }
+      .legend {
+        color: var(--muted);
+        font-size: 14px;
+      }
+      details {
+        margin-top: 14px;
+      }
+      summary {
+        cursor: pointer;
+        color: #f97316;
+        font-weight: 700;
+      }
+      @media (max-width: 700px) {
+        .q {
+          flex-direction: column;
+        }
+        select {
+          min-width: 100%;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <div class="wrap">
+      <h1>B1 — حالات الإعراب بالألمانية</h1>
+      <div class="sub">
+        50 جملة صعبة (Nominativ / Akkusativ / Dativ). اختاري/اختر من القوائم
+        المنسدلة ثم اضغط «تحقّق الإجابات».
+      </div>
+
+      <div class="card">
+        <div class="bar">
+          <button id="checkBtn">تحقّق الإجابات</button>
+          <button class="ghost" id="resetBtn">إعادة تعيين</button>
+          <span class="score" id="score">النتيجة: 0 / 50</span>
+          <span class="legend">✅ أخضر = صحيح · ❌ أحمر = خطأ</span>
+        </div>
+
+        <div class="grid" id="qs">
+          <!-- 1 -->
+          <div class="q">
+            <div class="num">1</div>
+            <div class="de">
+              ___ kommt heute früher nach Hause?
+              <select data-answer="Wer">
+                <option>—</option>
+                <option>Wer</option>
+                <option>Wen</option>
+                <option>Wem</option>
+              </select>
+            </div>
+          </div>
+          <!-- 2 -->
+          <div class="q">
+            <div class="num">2</div>
+            <div class="de">
+              Ich kenne ___ schon seit der Schule.
+              <select data-answer="ihn">
+                <option>—</option>
+                <option>er</option>
+                <option>ihm</option>
+                <option>ihn</option>
+              </select>
+            </div>
+          </div>
+          <!-- 3 -->
+          <div class="q">
+            <div class="num">3</div>
+            <div class="de">
+              Ich helfe ___ gern bei den Bewerbungen.
+              <select data-answer="ihr">
+                <option>—</option>
+                <option>sie</option>
+                <option>ihr</option>
+                <option>ihnen</option>
+              </select>
+            </div>
+          </div>
+          <!-- 4 -->
+          <div class="q">
+            <div class="num">4</div>
+            <div class="de">
+              Das ist ___ Mann, der mir gestern geschrieben hat.
+              <select data-answer="der">
+                <option>—</option>
+                <option>den</option>
+                <option>der</option>
+                <option>dem</option>
+              </select>
+            </div>
+          </div>
+          <!-- 5 -->
+          <div class="q">
+            <div class="num">5</div>
+            <div class="de">
+              Wir treffen heute ___ neuen Lehrer.
+              <select data-answer="den">
+                <option>—</option>
+                <option>der</option>
+                <option>den</option>
+                <option>dem</option>
+              </select>
+            </div>
+          </div>
+          <!-- 6 -->
+          <div class="q">
+            <div class="num">6</div>
+            <div class="de">
+              Ich fahre mit ___ Bus zur Uni.
+              <select data-answer="dem">
+                <option>—</option>
+                <option>der</option>
+                <option>den</option>
+                <option>dem</option>
+              </select>
+            </div>
+          </div>
+          <!-- 7 -->
+          <div class="q">
+            <div class="num">7</div>
+            <div class="de">
+              Sie wartet auf ___ Antwort.
+              <select data-answer="deine">
+                <option>—</option>
+                <option>dein</option>
+                <option>deine</option>
+                <option>deiner</option>
+              </select>
+            </div>
+          </div>
+          <!-- 8 -->
+          <div class="q">
+            <div class="num">8</div>
+            <div class="de">
+              Ich suche ___ Schlüssel seit einer Stunde.
+              <select data-answer="meinen">
+                <option>—</option>
+                <option>mein</option>
+                <option>meinen</option>
+                <option>meinem</option>
+              </select>
+            </div>
+          </div>
+          <!-- 9 -->
+          <div class="q">
+            <div class="num">9</div>
+            <div class="de">
+              Er gratuliert ___ herzlich zum Examen.
+              <select data-answer="seinem Freund">
+                <option>—</option>
+                <option>sein Freund</option>
+                <option>seinen Freund</option>
+                <option>seinem Freund</option>
+              </select>
+            </div>
+          </div>
+          <!-- 10 -->
+          <div class="q">
+            <div class="num">10</div>
+            <div class="de">
+              Kennst du ___ Frau dort?
+              <select data-answer="die">
+                <option>—</option>
+                <option>der</option>
+                <option>die</option>
+                <option>den</option>
+              </select>
+            </div>
+          </div>
+          <!-- 11 -->
+          <div class="q">
+            <div class="num">11</div>
+            <div class="de">
+              Das ist der Nachbar, mit ___ wir oft sprechen.
+              <select data-answer="dem">
+                <option>—</option>
+                <option>der</option>
+                <option>den</option>
+                <option>dem</option>
+              </select>
+            </div>
+          </div>
+          <!-- 12 -->
+          <div class="q">
+            <div class="num">12</div>
+            <div class="de">
+              Ich habe ___ Film gesehen, den du empfohlen hast.
+              <select data-answer="den">
+                <option>—</option>
+                <option>der</option>
+                <option>den</option>
+                <option>dem</option>
+              </select>
+            </div>
+          </div>
+          <!-- 13 -->
+          <div class="q">
+            <div class="num">13</div>
+            <div class="de">
+              Wir lernen heute in ___ Bibliothek.
+              <select data-answer="der">
+                <option>—</option>
+                <option>die</option>
+                <option>der</option>
+                <option>den</option>
+              </select>
+            </div>
+          </div>
+          <!-- 14 -->
+          <div class="q">
+            <div class="num">14</div>
+            <div class="de">
+              Stell bitte das Glas auf ___ Tisch!
+              <select data-answer="den">
+                <option>—</option>
+                <option>den</option>
+                <option>dem</option>
+                <option>der</option>
+              </select>
+            </div>
+          </div>
+          <!-- 15 -->
+          <div class="q">
+            <div class="num">15</div>
+            <div class="de">
+              Das Kind spielt unter ___ Baum.
+              <select data-answer="dem">
+                <option>—</option>
+                <option>den</option>
+                <option>dem</option>
+                <option>der</option>
+              </select>
+            </div>
+          </div>
+          <!-- 16 -->
+          <div class="q">
+            <div class="num">16</div>
+            <div class="de">
+              Sie stellt die Tasche hinter ___ Stuhl.
+              <select data-answer="den">
+                <option>—</option>
+                <option>den</option>
+                <option>dem</option>
+                <option>der</option>
+              </select>
+            </div>
+          </div>
+          <!-- 17 -->
+          <div class="q">
+            <div class="num">17</div>
+            <div class="de">
+              Ich habe ___ seit Wochen nicht gesehen.
+              <select data-answer="ihn">
+                <option>—</option>
+                <option>er</option>
+                <option>ihm</option>
+                <option>ihn</option>
+              </select>
+            </div>
+          </div>
+          <!-- 18 -->
+          <div class="q">
+            <div class="num">18</div>
+            <div class="de">
+              Kannst du ___ bitte die Tür öffnen?
+              <select data-answer="mir">
+                <option>—</option>
+                <option>ich</option>
+                <option>mir</option>
+                <option>mich</option>
+              </select>
+            </div>
+          </div>
+          <!-- 19 -->
+          <div class="q">
+            <div class="num">19</div>
+            <div class="de">
+              Der Pulli passt ___ leider nicht.
+              <select data-answer="mir">
+                <option>—</option>
+                <option>ich</option>
+                <option>mir</option>
+                <option>mich</option>
+              </select>
+            </div>
+          </div>
+          <!-- 20 -->
+          <div class="q">
+            <div class="num">20</div>
+            <div class="de">
+              Der Chef gibt ___ morgen frei.
+              <select data-answer="uns">
+                <option>—</option>
+                <option>wir</option>
+                <option>uns</option>
+                <option>unser</option>
+              </select>
+            </div>
+          </div>
+          <!-- 21 -->
+          <div class="q">
+            <div class="num">21</div>
+            <div class="de">
+              Ohne ___ Ausweis kommst du nicht rein.
+              <select data-answer="den">
+                <option>—</option>
+                <option>den</option>
+                <option>dem</option>
+                <option>der</option>
+              </select>
+              Ausweis
+            </div>
+          </div>
+          <!-- 22 -->
+          <div class="q">
+            <div class="num">22</div>
+            <div class="de">
+              Gegen ___ Plan gab es viele Einwände.
+              <select data-answer="den">
+                <option>—</option>
+                <option>der</option>
+                <option>den</option>
+                <option>dem</option>
+              </select>
+            </div>
+          </div>
+          <!-- 23 -->
+          <div class="q">
+            <div class="num">23</div>
+            <div class="de">
+              Das Geschenk ist für ___ Vater.
+              <select data-answer="deinen">
+                <option>—</option>
+                <option>dein</option>
+                <option>deinen</option>
+                <option>deinem</option>
+              </select>
+            </div>
+          </div>
+          <!-- 24 -->
+          <div class="q">
+            <div class="num">24</div>
+            <div class="de">
+              Seit zwei Jahren wohnt er bei ___ Tante.
+              <select data-answer="seiner">
+                <option>—</option>
+                <option>seine</option>
+                <option>seiner</option>
+                <option>seinen</option>
+              </select>
+            </div>
+          </div>
+          <!-- 25 -->
+          <div class="q">
+            <div class="num">25</div>
+            <div class="de">
+              Nach ___ Arbeit gehen wir joggen.
+              <select data-answer="der">
+                <option>—</option>
+                <option>die</option>
+                <option>der</option>
+                <option>den</option>
+              </select>
+            </div>
+          </div>
+          <!-- 26 -->
+          <div class="q">
+            <div class="num">26</div>
+            <div class="de">
+              Ich erinnere ___ noch gut daran.
+              <select data-answer="dich">
+                <option>—</option>
+                <option>du</option>
+                <option>dich</option>
+                <option>dir</option>
+              </select>
+            </div>
+          </div>
+          <!-- 27 -->
+          <div class="q">
+            <div class="num">27</div>
+            <div class="de">
+              Er hat ___ Fehler endlich verstanden.
+              <select data-answer="seinen">
+                <option>—</option>
+                <option>sein</option>
+                <option>seinen</option>
+                <option>seinem</option>
+              </select>
+            </div>
+          </div>
+          <!-- 28 -->
+          <div class="q">
+            <div class="num">28</div>
+            <div class="de">
+              Wir danken ___ für die Unterstützung.
+              <select data-answer="ihnen">
+                <option>—</option>
+                <option>sie</option>
+                <option>ihr</option>
+                <option>ihnen</option>
+              </select>
+            </div>
+          </div>
+          <!-- 29 -->
+          <div class="q">
+            <div class="num">29</div>
+            <div class="de">
+              ___ hilfst du beim Umzug?
+              <select data-answer="Wem">
+                <option>—</option>
+                <option>Wer</option>
+                <option>Wem</option>
+                <option>Wen</option>
+              </select>
+            </div>
+          </div>
+          <!-- 30 -->
+          <div class="q">
+            <div class="num">30</div>
+            <div class="de">
+              ___ von den Kandidaten hat die Stelle bekommen?
+              <select data-answer="Wer">
+                <option>—</option>
+                <option>Wer</option>
+                <option>Wem</option>
+                <option>Wen</option>
+              </select>
+            </div>
+          </div>
+          <!-- 31 -->
+          <div class="q">
+            <div class="num">31</div>
+            <div class="de">
+              Ich habe ___ Kollegen gestern geschrieben.
+              <select data-answer="meinem">
+                <option>—</option>
+                <option>mein</option>
+                <option>meinen</option>
+                <option>meinem</option>
+              </select>
+            </div>
+          </div>
+          <!-- 32 -->
+          <div class="q">
+            <div class="num">32</div>
+            <div class="de">
+              Siehst du ___ Leute dort?
+              <select data-answer="diese">
+                <option>—</option>
+                <option>diese</option>
+                <option>diesen</option>
+                <option>diesem</option>
+              </select>
+            </div>
+          </div>
+          <!-- 33 -->
+          <div class="q">
+            <div class="num">33</div>
+            <div class="de">
+              Er wohnt über ___ Bäckerei.
+              <select data-answer="der">
+                <option>—</option>
+                <option>die</option>
+                <option>der</option>
+                <option>den</option>
+              </select>
+            </div>
+          </div>
+          <!-- 34 -->
+          <div class="q">
+            <div class="num">34</div>
+            <div class="de">
+              Leg das Buch zwischen ___ Lampen.
+              <select data-answer="die">
+                <option>—</option>
+                <option>die</option>
+                <option>den</option>
+                <option>der</option>
+              </select>
+            </div>
+          </div>
+          <!-- 35 -->
+          <div class="q">
+            <div class="num">35</div>
+            <div class="de">
+              Das ist die Frau, ___ ich den Laptop gegeben habe.
+              <select data-answer="der">
+                <option>—</option>
+                <option>die</option>
+                <option>der</option>
+                <option>den</option>
+              </select>
+            </div>
+          </div>
+          <!-- 36 -->
+          <div class="q">
+            <div class="num">36</div>
+            <div class="de">
+              Der Brief gehört ___ Nachbarin.
+              <select data-answer="der">
+                <option>—</option>
+                <option>die</option>
+                <option>der</option>
+                <option>den</option>
+              </select>
+            </div>
+          </div>
+          <!-- 37 -->
+          <div class="q">
+            <div class="num">37</div>
+            <div class="de">
+              Wir treffen ___ morgen vor dem Bahnhof.
+              <select data-answer="sie">
+                <option>—</option>
+                <option>sie</option>
+                <option>ihr</option>
+                <option>ihnen</option>
+              </select>
+            </div>
+          </div>
+          <!-- 38 -->
+          <div class="q">
+            <div class="num">38</div>
+            <div class="de">
+              Der Lehrer erklärt ___ Schülern die Grammatik.
+              <select data-answer="den">
+                <option>—</option>
+                <option>die</option>
+                <option>den</option>
+                <option>dem</option>
+              </select>
+            </div>
+          </div>
+          <!-- 39 -->
+          <div class="q">
+            <div class="num">39</div>
+            <div class="de">
+              Ich interessiere mich für ___ Thema sehr.
+              <select data-answer="dieses">
+                <option>—</option>
+                <option>dieses</option>
+                <option>diesem</option>
+                <option>diesen</option>
+              </select>
+            </div>
+          </div>
+          <!-- 40 -->
+          <div class="q">
+            <div class="num">40</div>
+            <div class="de">
+              Setz dich bitte neben ___ Bruder.
+              <select data-answer="meinen">
+                <option>—</option>
+                <option>mein</option>
+                <option>meinen</option>
+                <option>meinem</option>
+              </select>
+            </div>
+          </div>
+          <!-- 41 -->
+          <div class="q">
+            <div class="num">41</div>
+            <div class="de">
+              Am Wochenende fahren wir in ___ Berge.
+              <select data-answer="die">
+                <option>—</option>
+                <option>die</option>
+                <option>den</option>
+                <option>der</option>
+              </select>
+            </div>
+          </div>
+          <!-- 42 -->
+          <div class="q">
+            <div class="num">42</div>
+            <div class="de">
+              Er wohnt seit einem Jahr in ___ Stadt.
+              <select data-answer="dieser">
+                <option>—</option>
+                <option>dieser</option>
+                <option>diese</option>
+                <option>diesem</option>
+              </select>
+            </div>
+          </div>
+          <!-- 43 -->
+          <div class="q">
+            <div class="num">43</div>
+            <div class="de">
+              Sie hat ___ Chef die Wahrheit gesagt.
+              <select data-answer="ihrem">
+                <option>—</option>
+                <option>ihr</option>
+                <option>ihren</option>
+                <option>ihrem</option>
+              </select>
+            </div>
+          </div>
+          <!-- 44 -->
+          <div class="q">
+            <div class="num">44</div>
+            <div class="de">
+              Ist das der Bus, auf ___ wir warten?
+              <select data-answer="den">
+                <option>—</option>
+                <option>den</option>
+                <option>dem</option>
+                <option>der</option>
+              </select>
+            </div>
+          </div>
+          <!-- 45 -->
+          <div class="q">
+            <div class="num">45</div>
+            <div class="de">
+              Der Kuchen schmeckt ___ Kindern nicht.
+              <select data-answer="den">
+                <option>—</option>
+                <option>die</option>
+                <option>den</option>
+                <option>der</option>
+              </select>
+            </div>
+          </div>
+          <!-- 46 -->
+          <div class="q">
+            <div class="num">46</div>
+            <div class="de">
+              Ohne ___ Fehler wäre die Prüfung perfekt gewesen.
+              <select data-answer="diesen">
+                <option>—</option>
+                <option>dieser</option>
+                <option>diese</option>
+                <option>diesen</option>
+              </select>
+            </div>
+          </div>
+          <!-- 47 -->
+          <div class="q">
+            <div class="num">47</div>
+            <div class="de">
+              Ich habe lange mit ___ darüber gesprochen.
+              <select data-answer="ihm">
+                <option>—</option>
+                <option>er</option>
+                <option>ihm</option>
+                <option>ihn</option>
+              </select>
+            </div>
+          </div>
+          <!-- 48 -->
+          <div class="q">
+            <div class="num">48</div>
+            <div class="de">
+              Das ist das Haus, vor ___ ein großer Baum steht.
+              <select data-answer="dem">
+                <option>—</option>
+                <option>das</option>
+                <option>der</option>
+                <option>dem</option>
+              </select>
+            </div>
+          </div>
+          <!-- 49 -->
+          <div class="q">
+            <div class="num">49</div>
+            <div class="de">
+              Wir setzen uns an ___ Tisch.
+              <select data-answer="den">
+                <option>—</option>
+                <option>den</option>
+                <option>dem</option>
+                <option>der</option>
+              </select>
+            </div>
+          </div>
+          <!-- 50 -->
+          <div class="q">
+            <div class="num">50</div>
+            <div class="de">
+              Kannst du ___ bitte Bescheid sagen?
+              <select data-answer="ihnen">
+                <option>—</option>
+                <option>sie</option>
+                <option>ihr</option>
+                <option>ihnen</option>
+              </select>
+            </div>
+          </div>
+        </div>
+
+        <details>
+          <summary>ملاحظات سريعة للمراجعة</summary>
+          <ul>
+            <li><b>für/gegen/ohne/um/durch</b> ⟶ دائمًا Akkusativ.</li>
+            <li><b>mit/bei/aus/zu/nach/von</b> ⟶ دائمًا Dativ.</li>
+            <li>
+              حروف الجر المزدوجة (in, an, auf, unter, vor, hinter, über,
+              zwischen): حركة ⟶ Akk · مكان ثابت ⟶ Dat.
+            </li>
+            <li>
+              أفعال داتيف شائعة:
+              <b
+                >helfen, danken, gehören, gefallen, passen, gratulieren,
+                schmecken, erklären + Dat (لشخص)</b
+              >.
+            </li>
+            <li>
+              Pronomen: ich→mich/mir · du→dich/dir · er→ihn/ihm · sie→sie/ihr ·
+              es→es/ihm · wir→uns/uns · ihr→euch/euch · sie(Sg/Pl)→sie/ ihr,
+              ihnen.
+            </li>
+          </ul>
+        </details>
+      </div>
+    </div>
+
+    <script>
+      const qs = [...document.querySelectorAll("select[data-answer]")];
+      const scoreEl = document.getElementById("score");
+      function checkAll() {
+        let ok = 0;
+        qs.forEach((sel) => {
+          const ans = sel.dataset.answer.trim();
+          const val = (sel.value || "").trim();
+          sel.classList.remove("ok", "bad");
+          if (!val || val === "—") {
+            sel.classList.add("bad");
+            return;
+          }
+          if (val === ans) {
+            sel.classList.add("ok");
+            ok++;
+          } else {
+            sel.classList.add("bad");
+          }
+        });
+        scoreEl.textContent = `النتيجة: ${ok} / ${qs.length}`;
+      }
+      function resetAll() {
+        qs.forEach((sel) => {
+          sel.value = "—";
+          sel.classList.remove("ok", "bad");
+        });
+        scoreEl.textContent = `النتيجة: 0 / ${qs.length}`;
+      }
+      document.getElementById("checkBtn").addEventListener("click", checkAll);
+      document.getElementById("resetBtn").addEventListener("click", resetAll);
+      // init
+      resetAll();
+    </script>
+  </body>
+</html>
