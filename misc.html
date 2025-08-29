@@ -1,0 +1,557 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width,initial-scale=1" />
+    <title>اختبار: ضمائر شخصية + البلدان مع الأدوات</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Tajawal:wght@400;700&display=swap"
+      rel="stylesheet"
+    />
+    <style>
+      :root {
+        --primary: #a855f7;
+        --primary-light: #c084fc;
+        --success: #10b981;
+        --danger: #ef4444;
+        --border: #e5e7eb;
+        --card: #fff;
+        --sidebar-w: 280px;
+      }
+      * {
+        box-sizing: border-box;
+        margin: 0;
+        padding: 0;
+      }
+      body {
+        font-family: "Tajawal", sans-serif;
+        background: linear-gradient(135deg, #f3f4f6 0%, #e5e7eb 100%);
+      }
+      .topbar {
+        display: none;
+        position: sticky;
+        top: 0;
+        z-index: 30;
+        background: #fff;
+        border-bottom: 1px solid var(--border);
+        padding: 10px 14px;
+      }
+      .hamburger {
+        all: unset;
+        cursor: pointer;
+        padding: 8px 10px;
+        border: 1px solid var(--border);
+        border-radius: 10px;
+      }
+      .layout {
+        display: grid;
+        grid-template-columns: var(--sidebar-w) 1fr;
+        min-height: 100vh;
+      }
+      #sidebar {
+        background: #fff;
+        border-inline-end: 1px solid var(--border);
+        position: sticky;
+        top: 0;
+        height: 100vh;
+        overflow: auto;
+        box-shadow: 0 4px 18px rgba(0, 0, 0, 0.05);
+      }
+      #sidebar.as-overlay {
+        position: fixed;
+        inset-inline-start: 0;
+        top: 52px;
+        bottom: 0;
+        width: 80vw;
+        max-width: 320px;
+        transform: translateX(110%);
+        transition: 0.2s;
+        border-inline-end: 1px solid var(--border);
+        z-index: 40;
+      }
+      #sidebar.as-overlay.open {
+        transform: translateX(0);
+      }
+      main {
+        padding: 24px;
+      }
+      .app {
+        width: min(980px, 100%);
+        margin: auto;
+      }
+      h1 {
+        color: var(--primary);
+      }
+      .card {
+        background: var(--card);
+        border: 1px solid var(--border);
+        border-radius: 18px;
+        padding: 22px;
+      }
+      .progress {
+        height: 10px;
+        background: #f3f4f6;
+        border-radius: 999px;
+        overflow: hidden;
+        margin: 12px 0 16px;
+      }
+      .progress > span {
+        display: block;
+        height: 100%;
+        width: 0;
+        background: linear-gradient(
+          90deg,
+          var(--primary-light),
+          var(--primary)
+        );
+        transition: 0.35s;
+      }
+      .choices {
+        display: grid;
+        gap: 10px;
+      }
+      .choice {
+        padding: 14px;
+        background: #f8fafc;
+        border: 2px solid var(--border);
+        border-radius: 12px;
+        cursor: pointer;
+      }
+      .choice.selected {
+        background: #f3e8ff;
+        border-color: #d8b4fe;
+      }
+      .choice.correct {
+        border-color: var(--success);
+        background: rgba(16, 185, 129, 0.1);
+      }
+      .choice.wrong {
+        border-color: var(--danger);
+        background: rgba(239, 68, 68, 0.08);
+      }
+      .type-input {
+        padding: 12px 14px;
+        border: 2px solid var(--border);
+        border-radius: 12px;
+        min-width: 320px;
+        direction: ltr;
+      }
+      .type-input.ok {
+        border-color: var(--success);
+        background: rgba(16, 185, 129, 0.08);
+      }
+      .type-input.bad {
+        border-color: var(--danger);
+        background: rgba(239, 68, 68, 0.08);
+      }
+      .de {
+        direction: ltr;
+        unicode-bidi: plaintext;
+        background: #f8fafc;
+        border: 1px solid var(--border);
+        border-radius: 8px;
+        padding: 3px 8px;
+        font-family: monospace;
+      }
+      .actions {
+        display: flex;
+        gap: 10px;
+        margin-top: 12px;
+      }
+      button {
+        all: unset;
+        padding: 12px 16px;
+        border-radius: 12px;
+        cursor: pointer;
+        font-weight: 700;
+      }
+      .primary {
+        background: linear-gradient(
+          90deg,
+          var(--primary),
+          var(--primary-light)
+        );
+        color: #fff;
+      }
+      .ghost {
+        border: 2px solid var(--border);
+      }
+      .feedback {
+        margin-top: 12px;
+        padding: 12px;
+        border: 1px solid;
+        border-radius: 12px;
+      }
+      .ok {
+        background: rgba(16, 185, 129, 0.1);
+        border-color: var(--success);
+      }
+      .bad {
+        background: rgba(239, 68, 68, 0.1);
+        border-color: var(--danger);
+      }
+      @media (max-width: 900px) {
+        .topbar {
+          display: flex;
+          justify-content: space-between;
+        }
+        .layout {
+          grid-template-columns: 1fr;
+        }
+        #sidebar {
+          display: none;
+        }
+        #sidebar.as-overlay {
+          display: block;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <div class="topbar">
+      <button class="hamburger" id="menuBtn">☰</button
+      ><strong>Pronomen & Länder</strong>
+    </div>
+    <div class="layout">
+      <div id="sidebar"></div>
+      <main>
+        <div class="app">
+          <h1>اختبار: الضمائر الشخصية + أدوات التعريف مع البلدان</h1>
+          <div class="card" id="quiz">
+            <div
+              style="
+                display: flex;
+                justify-content: space-between;
+                color: #6b7280;
+                margin-bottom: 8px;
+              "
+            >
+              <div id="qIndex"></div>
+              <div
+                id="qType"
+                class="de"
+                style="border: none; background: #faf5ff"
+              >
+                NOM · AKK · Dativ + Länder
+              </div>
+            </div>
+            <div class="progress"><span id="bar"></span></div>
+            <div id="prompt" style="font-size: 20px; margin: 8px 0 12px"></div>
+            <div id="content"></div>
+            <div class="actions">
+              <button class="primary" id="checkBtn">تحقّق</button>
+              <button class="ghost" id="nextBtn" disabled>التالي ⟵</button>
+              <button class="ghost" id="restartBtn">إعادة</button>
+            </div>
+            <div id="feedback"></div>
+          </div>
+
+          <details class="card" style="margin-top: 14px">
+            <summary
+              style="cursor: pointer; color: var(--primary); font-weight: 700"
+            >
+              📒 ملاحظات
+            </summary>
+            <div style="margin-top: 8px; line-height: 1.9; color: #6b7280">
+              <div>
+                مع <b>aus</b> نستخدم <b>Dativ</b>:
+                <span class="de">aus der Türkei</span> ·
+                <span class="de">aus der Schweiz</span> ·
+                <span class="de">aus dem Sudan</span> ·
+                <span class="de">aus dem Iran</span> · الجمع:
+                <span class="de">aus den USA</span>,
+                <span class="de">aus den Niederlanden</span>.
+              </div>
+            </div>
+          </details>
+        </div>
+      </main>
+    </div>
+
+    <script>
+      // sidebar loader
+      document.addEventListener("DOMContentLoaded", () => {
+        const host = document.getElementById("sidebar"),
+          btn = document.getElementById("menuBtn");
+        function mode() {
+          const m = matchMedia("(max-width:900px)").matches;
+          if (m) {
+            host.classList.add("as-overlay");
+          } else {
+            host.classList.remove("as-overlay", "open");
+            host.style.display = "";
+          }
+        }
+        fetch("sidebar.html")
+          .then((r) => r.text())
+          .then((h) => {
+            host.innerHTML = h;
+            host
+              .querySelectorAll(".section-header")
+              .forEach((x) =>
+                x.addEventListener("click", () =>
+                  x.closest(".section").toggleAttribute("aria-expanded")
+                )
+              );
+            const cur = location.pathname.split("/").pop() || "misc.html";
+            host.querySelectorAll(".slink").forEach((a) => {
+              if (a.getAttribute("href") === cur) a.classList.add("active");
+            });
+            mode();
+          });
+        btn &&
+          btn.addEventListener("click", () => {
+            if (host.classList.contains("as-overlay"))
+              host.classList.toggle("open");
+          });
+        addEventListener("resize", mode);
+      });
+
+      const eqArr = (a, b) =>
+        Array.isArray(a) &&
+        Array.isArray(b) &&
+        a.length === b.length &&
+        a.every((v, i) => v === b[i]);
+      const norm = (t) =>
+        String(t || "")
+          .toLowerCase()
+          .replace(/[؟?!.]+$/, "")
+          .replace(/\s+/g, " ")
+          .trim();
+
+      const Q = [
+        // ضمائر شخصية (تحويل)
+        {
+          type: "mc",
+          prompt: `اختر الضمير في حالة الرفع لكلمة <b>Rama</b>`,
+          choices: ["er", "sie", "es"],
+          answer: 1,
+          explain: "Rama مؤنث → <b>sie</b> (Nominativ).",
+        },
+        {
+          type: "mc",
+          prompt: `حوّل إلى Akkusativ: <span class="de">ich → ___</span>`,
+          choices: ["mich", "mir", "mein"],
+          answer: 0,
+          explain: "Akkusativ: ich → <b>mich</b>.",
+        },
+        {
+          type: "mc",
+          prompt: `حوّل إلى Dativ: <span class="de">er → ___</span>`,
+          choices: ["ihn", "ihm", "sein"],
+          answer: 1,
+          explain: "Dativ: er → <b>ihm</b>.",
+        },
+        {
+          type: "multi",
+          prompt: `اختر كل ضمائر المفعول (Akkusativ)`,
+          choices: ["mich", "dir", "ihn", "uns", "ihnen"],
+          answers: [0, 2, 3],
+          explain: "Akk: mich, dich, ihn, sie, es, uns, euch.",
+        },
+
+        // بلدان + أدوات
+        {
+          type: "mc",
+          prompt: `اختر الإجابة الصحيحة: <span class="de">Ich komme ___ Türkei.</span>`,
+          choices: ["aus der", "aus dem", "aus den"],
+          answer: 0,
+          explain: "die Türkei → Dativ: <b>aus der Türkei</b>.",
+        },
+        {
+          type: "mc",
+          prompt: `اختر: <span class="de">Ich komme ___ Sudan.</span>`,
+          choices: ["aus der", "aus dem", "aus den"],
+          answer: 1,
+          explain: "der Sudan → Dativ: <b>aus dem Sudan</b>.",
+        },
+        {
+          type: "mc",
+          prompt: `اختر: <span class="de">Ich komme ___ USA.</span>`,
+          choices: ["aus der", "aus dem", "aus den"],
+          answer: 2,
+          explain: "USA (جمع) → <b>aus den USA</b>.",
+        },
+        {
+          type: "mc",
+          prompt: `اختر: <span class="de">Ich komme ___ Iran.</span>`,
+          choices: ["aus dem", "aus der", "aus den"],
+          answer: 0,
+          explain: "der Iran → <b>aus dem Iran</b>.",
+        },
+        {
+          type: "mc",
+          prompt: `اختر: <span class="de">Ich komme ___ Niederlanden.</span>`,
+          choices: ["aus den", "aus dem", "aus der"],
+          answer: 0,
+          explain: "جمع: <b>aus den Niederlanden</b>.",
+        },
+
+        // كتابة حرّة
+        {
+          type: "type",
+          prompt: `ترجم: <b>أنا من سويسرا.</b>`,
+          answersText: ["ich komme aus der schweiz"],
+          explain: "<b>Ich komme aus der Schweiz.</b>",
+        },
+        {
+          type: "type",
+          prompt: `ترجم: <b>هو يساعدني.</b>`,
+          answersText: ["er hilft mir"],
+          explain: "<b>Er hilft mir.</b> (helfen مع Dativ).",
+        },
+      ];
+
+      let i = 0,
+        score = 0;
+      const bar = document.getElementById("bar");
+      const qIndex = document.getElementById("qIndex");
+      const qType = document.getElementById("qType");
+      const promptEl = document.getElementById("prompt");
+      const content = document.getElementById("content");
+      const fb = document.getElementById("feedback");
+      const check = document.getElementById("checkBtn");
+      const next = document.getElementById("nextBtn");
+      const restart = document.getElementById("restartBtn");
+
+      function render() {
+        const q = Q[i];
+        fb.innerHTML = "";
+        next.disabled = true;
+        check.disabled = false;
+        qIndex.textContent = `سؤال ${i + 1} / ${Q.length}`;
+        promptEl.innerHTML = q.prompt;
+        content.innerHTML = "";
+        const prg = document.querySelector(".progress>span");
+        if (prg) prg.style.width = `${(i / Q.length) * 100}%`;
+        if (q.type === "mc" || q.type === "multi") {
+          const wrap = document.createElement("div");
+          wrap.className = "choices";
+          q.choices.forEach((c, ix) => {
+            const b = document.createElement("button");
+            b.className = "choice";
+            b.innerHTML = c;
+            b.onclick = () => {
+              if (q.type === "mc") {
+                [...wrap.children].forEach((x) =>
+                  x.classList.remove("selected")
+                );
+                b.classList.add("selected");
+              } else {
+                b.classList.toggle("selected");
+              }
+            };
+            wrap.appendChild(b);
+          });
+          content.appendChild(wrap);
+        }
+        if (q.type === "type") {
+          const inp = document.createElement("input");
+          inp.className = "type-input";
+          inp.placeholder = "اكتب الجواب...";
+          content.appendChild(inp);
+        }
+      }
+      function getUA(q) {
+        if (q.type === "mc") {
+          const sel = content.querySelector(".choice.selected");
+          return sel
+            ? [...content.querySelectorAll(".choice")].indexOf(sel)
+            : null;
+        }
+        if (q.type === "multi") {
+          return [...content.querySelectorAll(".choice.selected")]
+            .map((b) => [...content.querySelectorAll(".choice")].indexOf(b))
+            .sort((a, b) => a - b);
+        }
+        if (q.type === "type") {
+          const t = content.querySelector(".type-input");
+          return t ? t.value : "";
+        }
+      }
+      const normText = (t) =>
+        String(t || "")
+          .toLowerCase()
+          .replace(/[؟?!.]+$/, "")
+          .replace(/\s+/g, " ")
+          .trim();
+
+      check.onclick = () => {
+        const q = Q[i],
+          ua = getUA(q);
+        if (
+          ua === null ||
+          (Array.isArray(ua) && ua.length === 0) ||
+          (q.type === "type" && String(ua).trim() === "")
+        ) {
+          fb.innerHTML =
+            '<div class="feedback" style="background:#fff7ed;border-color:#fed7aa">أجب أولًا.</div>';
+          return;
+        }
+        let ok = false;
+        if (q.type === "mc") ok = ua === q.answer;
+        if (q.type === "multi") ok = eqArr(ua, q.answers);
+        if (q.type === "type")
+          ok = (q.answersText || []).map(normText).includes(normText(ua));
+        if (q.type === "mc" || q.type === "multi") {
+          const btns = [...content.querySelectorAll(".choice")];
+          if (q.type === "mc") {
+            btns.forEach((b, ix) => {
+              if (ix === q.answer) b.classList.add("correct");
+              if (ix !== q.answer && b.classList.contains("selected"))
+                b.classList.add("wrong");
+            });
+          } else {
+            btns.forEach((b, ix) => {
+              if ((q.answers || []).includes(ix)) b.classList.add("correct");
+              if (
+                !(q.answers || []).includes(ix) &&
+                b.classList.contains("selected")
+              )
+                b.classList.add("wrong");
+            });
+          }
+        }
+        if (q.type === "type") {
+          const inp = content.querySelector(".type-input");
+          inp.classList.toggle("ok", ok);
+          inp.classList.toggle("bad", !ok);
+        }
+        fb.innerHTML = `<div class="feedback ${ok ? "ok" : "bad"}">${
+          ok ? "صحيح ✅" : "غير صحيح ❌"
+        } ${q.explain || ""}</div>`;
+        if (ok) score++;
+        next.disabled = false;
+        check.disabled = true;
+        const prg = document.querySelector(".progress>span");
+        if (prg) prg.style.width = `${((i + 1) / Q.length) * 100}%`;
+        if (i === Q.length - 1) next.textContent = "عرض النتيجة";
+      };
+      next.onclick = () => {
+        if (i < Q.length - 1) {
+          i++;
+          render();
+          next.disabled = true;
+          check.disabled = false;
+        } else {
+          const p = Math.round((score / Q.length) * 100);
+          document.getElementById(
+            "quiz"
+          ).innerHTML = `<div style="text-align:center;font-size:22px">انتهى ✅</div><div class="feedback ${
+            p >= 80 ? "ok" : "bad"
+          }" style="text-align:center">نتيجتك: <b>${score}</b> / <b>${
+            Q.length
+          }</b> (${p}%)</div><div style="display:flex;justify-content:center;margin-top:10px"><button class="primary" onclick="location.reload()">إعادة</button></div>`;
+        }
+      };
+      restart.onclick = () => {
+        i = 0;
+        score = 0;
+        render();
+      };
+      render();
+    </script>
+  </body>
+</html>

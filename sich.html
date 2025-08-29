@@ -3,9 +3,9 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <title>اختبار Akkusativ — أقسام حسب نوع السؤال</title>
+    <title>الضمائر والملكية و sich — تدريب تفاعلي</title>
 
-    <!-- خط Tajawal -->
+    <!-- Tajawal -->
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link
@@ -42,7 +42,6 @@
         background: linear-gradient(135deg, #f3f4f6 0%, #e5e7eb 100%);
       }
 
-      /* ===== Layout & Sidebar container ===== */
       .topbar {
         display: none;
         position: sticky;
@@ -66,7 +65,6 @@
         min-height: 100vh;
       }
 
-      /* الحاوية اللي منحقن فيها sidebar.html */
       #sidebar {
         background: #fff;
         border-inline-end: 1px solid var(--border);
@@ -77,8 +75,6 @@
         box-shadow: var(--shadow);
         z-index: 20;
       }
-
-      /* موبايل: كأوفرلاي ينزلق */
       #sidebar.as-overlay {
         position: fixed;
         inset-inline-start: 0;
@@ -89,7 +85,7 @@
         transform: translateX(110%);
         transition: transform 0.2s ease;
         border-inline-end: 1px solid var(--border);
-        display: block; /* يظل ظاهر كعنصر لكن خارج الشاشة */
+        display: block;
       }
       #sidebar.as-overlay.open {
         transform: translateX(0);
@@ -103,9 +99,7 @@
         margin: auto;
       }
 
-      /* ====== Sidebar inner styling (مهم!) ====== */
-
-      /* رأس الشعار */
+      /* Sidebar inner (optional if you have sidebar.html) */
       #sidebar .brand {
         display: flex;
         align-items: center;
@@ -138,14 +132,12 @@
         font-size: 13px;
       }
 
-      /* مجموعة الأقسام */
       #sidebar nav.nav {
         display: flex;
         flex-direction: column;
         gap: 8px;
         margin-top: 8px;
       }
-
       #sidebar .section {
         background: #fff;
         border: 1px solid var(--border);
@@ -155,7 +147,6 @@
       #sidebar .section + .section {
         margin-top: 10px;
       }
-
       #sidebar .section-header {
         display: flex;
         align-items: center;
@@ -177,7 +168,6 @@
       #sidebar .section[aria-expanded="true"] .chev {
         transform: rotate(180deg);
       }
-
       #sidebar .section-body {
         display: none;
         border-top: 1px solid var(--border);
@@ -185,12 +175,10 @@
       #sidebar .section[aria-expanded="true"] .section-body {
         display: block;
       }
-
       #sidebar .submenu {
         padding: 10px;
       }
 
-      /* روابط القائمة */
       #sidebar .slink {
         display: flex;
         align-items: center;
@@ -210,8 +198,6 @@
         background: #fff1f2;
         border-color: #fecdd3;
       }
-
-      /* شارة صغيرة على اليمين */
       #sidebar .chip {
         font-size: 12px;
         background: #ffe4e6;
@@ -221,7 +207,6 @@
         border: 1px solid #fecdd3;
       }
 
-      /* ===== Header ===== */
       .header {
         display: flex;
         align-items: center;
@@ -241,7 +226,7 @@
         color: var(--text-light);
         font-size: clamp(14px, 1.6vw, 17px);
         margin-top: 8px;
-        max-width: 650px;
+        max-width: 720px;
       }
       .pill {
         background: #f1f5f9;
@@ -253,7 +238,6 @@
         font-weight: 600;
       }
 
-      /* ===== Cards & Quiz ===== */
       .card {
         background: var(--card-bg);
         border-radius: 20px;
@@ -261,6 +245,7 @@
         padding: 24px;
         border: 1px solid var(--border);
       }
+
       .progress {
         height: 12px;
         background: #f3f4f6;
@@ -279,6 +264,7 @@
         );
         transition: width 0.4s ease;
       }
+
       .q-meta {
         display: flex;
         align-items: center;
@@ -366,7 +352,7 @@
         background: #f8fafc;
         color: var(--text);
         border: 2px solid var(--border);
-        min-width: 110px;
+        min-width: 120px;
       }
 
       .actions {
@@ -421,7 +407,6 @@
         color: #92400e;
       }
 
-      /* أقسام الصفحة */
       .section-list {
         display: grid;
         gap: 14px;
@@ -463,7 +448,6 @@
         font-weight: 700;
       }
 
-      /* type inputs */
       .type-wrap {
         display: flex;
         flex-wrap: wrap;
@@ -500,7 +484,21 @@
         text-align: center;
       }
 
-      /* ===== رسبونسِف ===== */
+      .cheat-table {
+        width: 100%;
+        border-collapse: collapse;
+        margin-top: 12px;
+      }
+      .cheat-table th,
+      .cheat-table td {
+        border: 1px solid var(--border);
+        padding: 8px 10px;
+        text-align: center;
+      }
+      .cheat-table th {
+        background: #fafafa;
+      }
+
       @media (max-width: 900px) {
         .topbar {
           display: flex;
@@ -510,7 +508,6 @@
         .layout {
           grid-template-columns: 1fr;
         }
-        /* نخفي نسخة الدِسكتوب من السايدبار ونفعّل الأوفرلاي */
         #sidebar {
           display: none;
         }
@@ -523,119 +520,40 @@
       }
     </style>
   </head>
-  <script>
-    document.addEventListener("DOMContentLoaded", () => {
-      const sidebarHost = document.getElementById("sidebar");
-      const menuBtn = document.getElementById("menuBtn");
-
-      function applySidebarMode() {
-        const isMobile = window.matchMedia("(max-width: 900px)").matches;
-        if (isMobile) {
-          sidebarHost.classList.add("as-overlay");
-          // بالموبايل ما بدنا sidebar دائم، بيظهر بالـ menu
-        } else {
-          sidebarHost.classList.remove("as-overlay", "open");
-          sidebarHost.style.display = ""; // يرجع للوضع الطبيعي
-        }
-      }
-
-      async function loadSidebar() {
-        try {
-          const res = await fetch("sidebar.html", { cache: "no-cache" });
-          if (!res.ok) throw new Error(res.status + " " + res.statusText);
-          const html = await res.text();
-          sidebarHost.innerHTML = html;
-
-          // فعل طيّ الأقسام
-          sidebarHost.querySelectorAll(".section-header").forEach((h) => {
-            h.addEventListener("click", () => {
-              const s = h.closest(".section");
-              if (s) s.toggleAttribute("aria-expanded");
-            });
-          });
-
-          // علّم الرابط الحالي active
-          const current = location.pathname.split("/").pop() || "index.html";
-          sidebarHost.querySelectorAll(".slink").forEach((a) => {
-            if (a.getAttribute("href") === current) {
-              a.classList.add("active");
-            }
-          });
-
-          applySidebarMode();
-        } catch (err) {
-          console.error("Sidebar load failed:", err);
-          // فallback بسيط
-          sidebarHost.innerHTML = `
-          <aside style="padding:16px">
-            <div style="color:#991b1b;background:#fee2e2;border:1px solid #fecaca;padding:10px;border-radius:10px">
-              تعذّر تحميل <b>sidebar.html</b>. شغّل الصفحة عبر خادم محلي (مثلاً VS Code Live Server) أو تأكد من المسار.
-            </div>
-          </aside>
-        `;
-          applySidebarMode();
-        }
-      }
-
-      // زر القائمة للموبايل
-      if (menuBtn) {
-        menuBtn.addEventListener("click", () => {
-          if (sidebarHost.classList.contains("as-overlay")) {
-            sidebarHost.classList.toggle("open");
-          }
-        });
-      }
-
-      // غلق الأوفرلاي لما يضغط خارج السايدبار (اختياري)
-      document.addEventListener("click", (e) => {
-        if (
-          sidebarHost.classList.contains("as-overlay") &&
-          sidebarHost.classList.contains("open")
-        ) {
-          const inside = e.target.closest("#sidebar, #menuBtn");
-          if (!inside) sidebarHost.classList.remove("open");
-        }
-      });
-
-      window.addEventListener("resize", applySidebarMode);
-
-      loadSidebar();
-    });
-  </script>
 
   <body>
     <!-- Top bar للموبايل -->
     <div class="topbar">
       <button class="hamburger" id="menuBtn">☰</button>
-      <strong>Akkusativ Quiz</strong>
+      <strong>Pronouns & Possessives & sich</strong>
     </div>
 
     <div class="layout">
       <div id="sidebar"></div>
 
-      <!-- Main -->
       <main class="content">
         <div class="app">
           <div class="header">
             <div>
               <h1>
-                اختبار تفاعلي:
-                <span style="color: var(--primary-light)">Der Akkusativ</span>
+                الضمائر والملكية و
+                <span style="color: var(--primary-light)">sich</span>
               </h1>
               <div class="subtitle">
-                الصفحة مقسّمة إلى أقسام حسب نوع السؤال: MC → Multi → Gap → كتابة
-                → ترجمة → صياغة سؤال.
+                درّب نفسك على الضمائر الشخصية (NOM/AKK/DAT)، الضمائر الانعكاسية
+                (sich)، وضمائر الملكية مع نهاياتها حسب الحالة والنوع. كل قسم فيه
+                أسئلة بأنماط مختلفة.
               </div>
             </div>
             <div class="pill" id="globalScore">النتيجة الإجمالية: 0 / 0</div>
           </div>
 
-          <!-- قائمة الأقسام -->
+          <!-- أقسام -->
           <div class="card" id="sectionsCard">
             <div class="section-list" id="secList"></div>
           </div>
 
-          <!-- الكويز النشط -->
+          <!-- كويز نشط -->
           <div class="card" id="quizCard" style="display: none">
             <div class="q-meta">
               <div class="q-index" id="qIndex">سؤال 1 / ?</div>
@@ -653,62 +571,159 @@
             <div class="pill" id="catPill" style="margin-top: 10px">—</div>
           </div>
 
-          <!-- أمثلة الدفتر -->
+          <!-- Cheatsheet -->
           <details class="card" style="margin-top: 18px">
             <summary
               style="cursor: pointer; color: var(--primary); font-weight: 700"
             >
-              📒 أمثلة الدفتر المعتمدة هنا
+              📒 مرجع سريع (Cheatsheet)
             </summary>
-            <div
-              class="examples-wrap"
-              style="
-                margin-top: 10px;
-                display: grid;
-                grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
-                gap: 12px;
-              "
-            >
-              <div class="ex">
-                <div class="de">
-                  Ich sehe den Mann / die Frau / das Kind / die Kinder
-                </div>
-              </div>
-              <div class="ex">
-                <div class="de">
-                  Ich sehe keinen Mann / keine Frau / kein Kind / keine Kinder
-                </div>
-              </div>
-              <div class="ex"><div class="de">Er trinkt einen Kaffee</div></div>
-              <div class="ex">
-                <div class="de">Die Frau kauft eine Jacke und einen Mantel</div>
-              </div>
-              <div class="ex">
-                <div class="de">Hast du einen Freund? · Sie hat einen Hund</div>
-              </div>
-              <div class="ex">
-                <div class="de">Kennst du Sarah? — Ja, ich kenne sie</div>
-              </div>
-              <div class="ex">
-                <div class="de">Kennst du das Kind? — Ja, ich kenne es</div>
-              </div>
-              <div class="ex">
-                <div class="de">Brauchst du das Auto? — Ja, ich brauche es</div>
-              </div>
-              <div class="ex">
-                <div class="de">Wen fragst du? — Ich frage dich</div>
-              </div>
-              <div class="ex">
-                <div class="de">Ich esse den Salat · Ich trinke den Saft</div>
-              </div>
-            </div>
+
+            <h3 style="margin-top: 12px">١) الضمائر الشخصية</h3>
+            <table class="cheat-table">
+              <tr>
+                <th>الحالة</th>
+                <th>Ich</th>
+                <th>Du</th>
+                <th>Er</th>
+                <th>Sie</th>
+                <th>Es</th>
+                <th>Wir</th>
+                <th>Ihr</th>
+                <th>sie</th>
+                <th>Sie</th>
+              </tr>
+              <tr>
+                <td>Nominativ</td>
+                <td>ich</td>
+                <td>du</td>
+                <td>er</td>
+                <td>sie</td>
+                <td>es</td>
+                <td>wir</td>
+                <td>ihr</td>
+                <td>sie</td>
+                <td>Sie</td>
+              </tr>
+              <tr>
+                <td>Akkusativ</td>
+                <td>mich</td>
+                <td>dich</td>
+                <td>ihn</td>
+                <td>sie</td>
+                <td>es</td>
+                <td>uns</td>
+                <td>euch</td>
+                <td>sie</td>
+                <td>Sie</td>
+              </tr>
+              <tr>
+                <td>Dativ</td>
+                <td>mir</td>
+                <td>dir</td>
+                <td>ihm</td>
+                <td>ihr</td>
+                <td>ihm</td>
+                <td>uns</td>
+                <td>euch</td>
+                <td>ihnen</td>
+                <td>Ihnen</td>
+              </tr>
+            </table>
+
+            <h3 style="margin-top: 12px">٢) الضمائر الانعكاسية (sich)</h3>
+            <table class="cheat-table">
+              <tr>
+                <th>الشخص</th>
+                <th>Akk</th>
+                <th>Dat</th>
+              </tr>
+              <tr>
+                <td>ich</td>
+                <td>mich</td>
+                <td>mir</td>
+              </tr>
+              <tr>
+                <td>du</td>
+                <td>dich</td>
+                <td>dir</td>
+              </tr>
+              <tr>
+                <td>er/sie/es</td>
+                <td>sich</td>
+                <td>sich</td>
+              </tr>
+              <tr>
+                <td>wir</td>
+                <td>uns</td>
+                <td>uns</td>
+              </tr>
+              <tr>
+                <td>ihr</td>
+                <td>euch</td>
+                <td>euch</td>
+              </tr>
+              <tr>
+                <td>sie/Sie</td>
+                <td>sich</td>
+                <td>sich</td>
+              </tr>
+            </table>
+            <p style="margin-top: 8px; color: var(--text-light)">
+              مثال:
+              <span class="de"
+                >Ich wasche <b>mich</b>. · Ich wasche <b>mir</b> die
+                Hände.</span
+              >
+            </p>
+
+            <h3 style="margin-top: 12px">
+              ٣) ضمائر الملكية (كأدوات ein-words)
+            </h3>
+            <p style="color: var(--text-light)">
+              الأساس: mein, dein, sein, ihr, sein, unser, euer, ihr, Ihr
+            </p>
+            <table class="cheat-table">
+              <tr>
+                <th></th>
+                <th>مذكر</th>
+                <th>مؤنث</th>
+                <th>حيادي</th>
+                <th>جمع</th>
+              </tr>
+              <tr>
+                <td>Nominativ</td>
+                <td>-</td>
+                <td>-e</td>
+                <td>-</td>
+                <td>-e</td>
+              </tr>
+              <tr>
+                <td>Akkusativ</td>
+                <td>-en</td>
+                <td>-e</td>
+                <td>-</td>
+                <td>-e</td>
+              </tr>
+              <tr>
+                <td>Dativ</td>
+                <td>-em</td>
+                <td>-er</td>
+                <td>-em</td>
+                <td>-en (ويُضاف -n للاسم الجمع غالبًا)</td>
+              </tr>
+            </table>
+            <p style="margin-top: 8px; color: var(--text-light)">
+              ملاحظة: <b>euer</b> عند إضافة النهاية تسقط الـ <b>e</b> الوسطى:
+              <span class="de">eure, euren, eurem, eurer</span>.
+            </p>
           </details>
         </div>
       </main>
     </div>
 
     <script>
-      /* ========= أدوات صغيرة ========= */
+      /* ==== أدوات مساعدة ==== */
       function arraysEqual(a, b) {
         return (
           Array.isArray(a) &&
@@ -725,32 +740,27 @@
           .trim();
       }
 
-      /* ========= تحميل الـ Sidebar من ملف منفصل + تفعيل الأحداث ========= */
+      /* ==== Sidebar (اختياري إذا عندك sidebar.html) ==== */
       const sidebarHost = document.getElementById("sidebar");
       const menuBtn = document.getElementById("menuBtn");
 
-      // نحدد وضع الـ sidebar حسب العرض
       function applySidebarMode() {
-        if (window.matchMedia("(max-width: 900px)").matches) {
+        const isMobile = window.matchMedia("(max-width: 900px)").matches;
+        if (isMobile) {
           sidebarHost.classList.add("as-overlay");
         } else {
           sidebarHost.classList.remove("as-overlay", "open");
+          sidebarHost.style.display = "";
         }
       }
 
-      // حمّل محتوى sidebar.html
-      fetch("sidebar.html")
-        .then((res) => res.text())
-        .then((html) => {
+      async function loadSidebar() {
+        try {
+          const res = await fetch("sidebar.html", { cache: "no-cache" });
+          if (!res.ok) throw new Error(res.status + " " + res.statusText);
+          const html = await res.text();
           sidebarHost.innerHTML = html;
 
-          // هايلايت الرابط الحالي
-          const current = location.pathname.split("/").pop() || "index.html";
-          sidebarHost.querySelectorAll(".slink").forEach((a) => {
-            if (a.getAttribute("href") === current) a.classList.add("active");
-          });
-
-          // فعل الطي/الفتح لأقسام القائمة داخل السايدبار
           sidebarHost.querySelectorAll(".section-header").forEach((h) => {
             h.addEventListener("click", () => {
               const s = h.closest(".section");
@@ -758,384 +768,364 @@
             });
           });
 
-          // وضع الموبايل/الدِسكتوب
-          applySidebarMode();
-        });
+          const current = location.pathname.split("/").pop() || "index.html";
+          sidebarHost.querySelectorAll(".slink").forEach((a) => {
+            if (a.getAttribute("href") === current) a.classList.add("active");
+          });
 
-      // زر القائمة للموبايل
+          applySidebarMode();
+        } catch (e) {
+          console.warn("Sidebar load failed, showing fallback");
+          sidebarHost.innerHTML = `
+            <aside style="padding:16px">
+              <div style="color:#991b1b;background:#fee2e2;border:1px solid #fecaca;padding:10px;border-radius:10px">
+                تعذّر تحميل <b>sidebar.html</b>. شغّل عبر خادم محلي (Live Server) أو تأكد من المسار.
+              </div>
+              <nav class="nav" style="margin-top:10px">
+                <div class="section" aria-expanded="true">
+                  <div class="section-header">
+                    <div class="section-title">القائمة</div>
+                    <span class="chev">⌄</span>
+                  </div>
+                  <div class="section-body">
+                    <div class="submenu">
+                      <a class="slink active" href="#">Pronouns &amp; Possessives</a>
+                    </div>
+                  </div>
+                </div>
+              </nav>
+            </aside>`;
+          applySidebarMode();
+        }
+      }
+
       if (menuBtn) {
-        menuBtn.onclick = () => {
+        menuBtn.addEventListener("click", () => {
           if (sidebarHost.classList.contains("as-overlay")) {
             sidebarHost.classList.toggle("open");
           }
-        };
+        });
       }
-      // أغلق السايدبار عند تغيير الحجم لو انتقلنا من موبايل لدسكتوب
+      document.addEventListener("click", (e) => {
+        if (
+          sidebarHost.classList.contains("as-overlay") &&
+          sidebarHost.classList.contains("open")
+        ) {
+          const inside = e.target.closest("#sidebar, #menuBtn");
+          if (!inside) sidebarHost.classList.remove("open");
+        }
+      });
       window.addEventListener("resize", applySidebarMode);
+      loadSidebar();
 
-      /* ========= بنك الأسئلة ========= */
+      /* ==== بنك الأسئلة ==== */
       const QUESTIONS = [
+        /*** A) الضمائر الشخصية NOM/AKK/DAT ***/
         // MC
         {
           type: "mc",
-          cat: "der→den",
-          prompt: `أكمل: <span class="de">Ich sehe ___ Mann.</span>`,
-          choices: ["der", "den", "dem"],
+          cat: "ضمائر — Akk",
+          prompt: `اختر ضمير المفعول المناسب لـ <span class="de">ich</span>:`,
+          choices: ["mir", "mich", "ich"],
           answer: 1,
-          explain: 'المذكر في Akkusativ يأخذ <span class="de">den</span>.',
+          explain: "Akkusativ لـ ich → mich.",
         },
         {
           type: "mc",
-          cat: "die (ثابتة)",
-          prompt: `أكمل: <span class="de">Ich sehe ___ Frau.</span>`,
-          choices: ["die", "der", "den"],
+          cat: "ضمائر — Dat",
+          prompt: `اختر ضمير الداتِف المناسب لـ <span class="de">du</span>:`,
+          choices: ["dir", "dich", "du"],
           answer: 0,
-          explain: 'المؤنث يبقى <span class="de">die</span> في Akkusativ.',
+          explain: "Dativ لـ du → dir.",
         },
         {
           type: "mc",
-          cat: "das (ثابت)",
-          prompt: `أكمل: <span class="de">Ich sehe ___ Kind.</span>`,
-          choices: ["das", "den", "dem"],
-          answer: 0,
-          explain: 'الحيادي يبقى <span class="de">das</span>.',
+          cat: "ضمائر — Akk",
+          prompt: `أكمل: <span class="de">Kennst du Max? — Ja, ich kenne ___.</span>`,
+          choices: ["er", "ihm", "ihn"],
+          answer: 2,
+          explain: "Akk لـ er → ihn.",
         },
         {
           type: "mc",
-          cat: "الجمع",
-          prompt: `أكمل: <span class="de">Ich sehe ___ Kinder.</span>`,
-          choices: ["die", "den", "das"],
-          answer: 0,
-          explain: 'الجمع معرّف: <span class="de">die Kinder</span>.',
-        },
-        {
-          type: "mc",
-          cat: "ein→einen",
-          prompt: `أكمل: <span class="de">Er trinkt ___ Kaffee.</span>`,
-          choices: ["ein", "einen", "einem"],
+          cat: "ضمائر — Dat",
+          prompt: `أكمل: <span class="de">Ich helfe ___ (sie).</span>`,
+          choices: ["sie", "ihr", "ihnen"],
           answer: 1,
-          explain: 'المذكر النكرة: <span class="de">einen</span>.',
-        },
-        {
-          type: "mc",
-          cat: "kein→keinen",
-          prompt: `أكمل: <span class="de">Ich sehe ___ Mann.</span> <span class="mini-note">(نفي)</span>`,
-          choices: ["kein", "keinen", "keinem"],
-          answer: 1,
-          explain: 'نفي المذكر: <span class="de">keinen</span>.',
-        },
-        {
-          type: "mc",
-          cat: "نفي المؤنث",
-          prompt: `أكمل: <span class="de">Ich sehe ___ Frau.</span> <span class="mini-note">(نفي)</span>`,
-          choices: ["keine", "keinen", "keinem"],
-          answer: 0,
-          explain: '<span class="de">keine Frau</span>.',
-        },
-        {
-          type: "mc",
-          cat: "نفي الحيادي",
-          prompt: `أكمل: <span class="de">Ich sehe ___ Kind.</span> <span class="mini-note">(نفي)</span>`,
-          choices: ["kein", "keine", "keinem"],
-          answer: 0,
-          explain: '<span class="de">kein Kind</span>.',
-        },
-        {
-          type: "mc",
-          cat: "نفي الجمع",
-          prompt: `أكمل: <span class="de">Ich sehe ___ Kinder.</span> <span class="mini-note">(نفي)</span>`,
-          choices: ["keine", "keinen", "keinem"],
-          answer: 0,
-          explain: '<span class="de">keine Kinder</span>.',
-        },
-        {
-          type: "mc",
-          cat: "haben + Akk",
-          prompt: `أكمل: <span class="de">Hast du ___ Freund?</span>`,
-          choices: ["ein", "einen", "einem"],
-          answer: 1,
-          explain: '<span class="de">einen Freund</span>.',
-        },
-        {
-          type: "mc",
-          cat: "haben + Akk",
-          prompt: `أكمل: <span class="de">Sie hat ___ Hund.</span>`,
-          choices: ["ein", "einen", "einem"],
-          answer: 1,
-          explain: '<span class="de">einen Hund</span>.',
-        },
-        {
-          type: "mc",
-          cat: "kaufen + Akk",
-          prompt: `أكمل: <span class="de">Die Frau kauft eine Jacke und ___ Mantel.</span>`,
-          choices: ["ein", "einen", "einem"],
-          answer: 1,
-          explain: '<span class="de">einen Mantel</span>.',
-        },
-        {
-          type: "mc",
-          cat: "trinken + Akk",
-          prompt: `اختر الصحيح: <span class="de">Wir trinken ___ Kaffee.</span>`,
-          choices: ["einen", "ein", "einem"],
-          answer: 0,
-          explain: '<span class="de">einen Kaffee</span>.',
-        },
-        {
-          type: "mc",
-          cat: "essen + Akk",
-          prompt: `اختر الصحيح: <span class="de">Ich esse ___ Salat.</span>`,
-          choices: ["den", "der", "dem"],
-          answer: 0,
-          explain: '<span class="de">den Salat</span>.',
-        },
-        {
-          type: "mc",
-          cat: "trinken + Akk",
-          prompt: `اختر الصحيح: <span class="de">Ich trinke ___ Saft.</span>`,
-          choices: ["den", "der", "dem"],
-          answer: 0,
-          explain: '<span class="de">den Saft</span>.',
+          explain: "helfen يأخذ Dativ: sie (هي) → ihr.",
         },
 
         // MULTI
         {
           type: "multi",
-          cat: "أفعال تأخذ Akk",
-          prompt: `اختر كل الأفعال التي تحتاج مفعولًا مباشرًا غالبًا`,
-          choices: [
-            "haben",
-            "brauchen",
-            "sehen",
-            "lieben",
-            "fragen",
-            "sein",
-            "werden",
-            "bleiben",
-          ],
-          answers: [0, 1, 2, 3, 4],
+          cat: "تصنيف الحالات",
+          prompt: `اختر كل ضمائر الـ <b>Akkusativ</b>:`,
+          choices: ["mich", "dich", "ihm", "sie", "uns", "euch", "ihnen"],
+          answers: [0, 1, 3, 4, 5],
           explain:
-            "متعدّية: haben/brauchen/sehen/lieben/fragen. أمّا sein/werden/bleiben فليست متعدّية.",
+            "Akk: mich, dich, ihn, sie, es, uns, euch, sie/Sie. (ihm/ihnen = Dativ)",
         },
         {
           type: "multi",
-          cat: "ضمائر Akk",
-          prompt: `اختر كل ضمائر المفعول الصحيحة`,
-          choices: [
-            "mich",
-            "dich",
-            "ihn",
-            "sie",
-            "es",
-            "uns",
-            "euch",
-            "ihnen",
-            "Sie",
-          ],
-          answers: [0, 1, 2, 3, 4, 5, 6],
-          explain:
-            "Akk: mich, dich, ihn, sie, es, uns, euch, sie/Sie. (ihnen = Dativ).",
+          cat: "تصنيف الحالات",
+          prompt: `اختر كل ضمائر الـ <b>Dativ</b>:`,
+          choices: ["mir", "dir", "ihn", "ihr", "uns", "euch", "ihm"],
+          answers: [0, 1, 3, 4, 5, 6],
+          explain: "Dat: mir, dir, ihm, ihr, uns, euch, ihnen/Ihnen.",
         },
 
         // GAP
         {
           type: "gap",
-          cat: "Wen/Was",
-          prompt: `اختر أداة السؤال الصحيحة:`,
-          segments: [
-            '<span class="de">___ liebst du?</span> <span class="mini-note">(عن شخص)</span>',
-          ],
-          options: [["Wer", "Wen", "Was"]],
-          answer: [1],
-          explain: "عن المفعول العاقل → <b>Wen</b>.",
-        },
-        {
-          type: "gap",
-          cat: "Wen/Was",
-          prompt: `اختر أداة السؤال الصحيحة:`,
-          segments: [
-            '<span class="de">___ kaufst du?</span> <span class="mini-note">(عن شيء)</span>',
-          ],
-          options: [["Wer", "Wen", "Was"]],
+          cat: "Wen/Was/ wem",
+          prompt: `اختر الأداة الصحيحة:`,
+          segments: ['<span class="de">___ hilfst du?</span>'],
+          options: [["Wen", "Was", "Wem"]],
           answer: [2],
-          explain: "عن الأشياء → <b>Was</b>.",
+          explain: "مع Dativ نستخدم <b>Wem</b> للسؤال عن الشخص.",
         },
         {
           type: "gap",
-          cat: "تحويلات شائعة",
-          prompt: `حوّل كما يلزم:`,
-          segments: ['<span class="de">Ich sehe ', " Mann.</span>"],
-          options: [["der", "den", "ein", "einen", "kein", "keinen"]],
+          cat: "تحويلات ضمائر",
+          prompt: `حوّل إلى Akkusativ (ضمير):`,
+          segments: ['<span class="de">Ich sehe ', " (du).</span>"],
+          options: [["dir", "dich", "du"]],
           answer: [1],
-          explain: 'المذكر في Akk: <span class="de">den</span>.',
-        },
-        {
-          type: "gap",
-          cat: "سؤال/جواب",
-          prompt: `أكمل الجوابين:`,
-          segments: [
-            '<span class="de">Hast du ',
-            ' Freund?</span> — <span class="de">Ja, ich habe ',
-            " Freund.</span>",
-          ],
-          options: [
-            ["ein", "einen", "keinen"],
-            ["ein", "einen", "keinen"],
-          ],
-          answer: [1, 1],
-          explain: '<span class="de">einen Freund</span>.',
-        },
-        {
-          type: "gap",
-          cat: "سؤال/جواب",
-          prompt: `أكمل:`,
-          segments: [
-            '<span class="de">Kennst du Sarah?</span> — <span class="de">Ja, ich kenne ',
-            ".</span>",
-          ],
-          options: [["sie", "ihr", "ihnen"]],
-          answer: [0],
-          explain: 'ضمير المؤنث في Akk: <span class="de">sie</span>.',
+          explain: "du في Akk → dich.",
         },
 
-        // TYPE (كتابة حرّة تدريب قواعد)
+        // TYPE
         {
           type: "type",
-          cat: "اكتب الشكل الصحيح (مذكر معرّف)",
-          prompt: `حوّل إلى Akkusativ: <span class="de">Ich sehe <b>der Mann</b>.</span>`,
-          note: "der → den",
-          answersText: ["den mann"],
-          explain: '<span class="de">den Mann</span>.',
+          cat: "كتابة — Akk",
+          prompt: `اكتب ضمير Akkusativ لـ <span class="de">wir</span>:`,
+          answersText: ["uns"],
+          explain: "wir → uns (Akk).",
         },
         {
           type: "type",
-          cat: "اكتب الشكل الصحيح (نكرة)",
-          prompt: `حوّل: <span class="de">Er trinkt <b>ein Kaffee</b>.</span>`,
-          note: "ein → einen",
-          answersText: ["einen kaffee"],
-          explain: '<span class="de">einen Kaffee</span>.',
-        },
-        {
-          type: "type",
-          cat: "ضمائر المفعول",
-          prompt: `بدّل الاسم بضمير مناسب (Akk): <span class="de">Ich sehe <b>Sarah</b>.</span>`,
-          answersText: ["sie"],
-          explain: '<span class="de">Ich sehe sie.</span>',
-        },
-        {
-          type: "type",
-          cat: "Wen/Was كتابة",
-          prompt: `اكتب أداة السؤال: <span class="de">___ liebst du?</span> (عن شخص)`,
-          answersText: ["wen"],
-          explain: "عن العاقل: <b>Wen</b>.",
-        },
-        {
-          type: "type",
-          cat: "kein→keinen",
-          prompt: `حوّل: <span class="de">Ich sehe <b>kein Mann</b>.</span>`,
-          note: "kein → keinen",
-          answersText: ["keinen mann"],
-          explain: '<span class="de">keinen Mann</span>.',
-        },
-        {
-          type: "type",
-          cat: "ضمائر — محايد",
-          prompt: `اكتب الضمير: <span class="de">Kennst du <b>das Kind</b>?</span> — <span class="de">Ja, ich kenne ___.</span>`,
-          answersText: ["es"],
-          explain: '<span class="de">das Kind → es</span>.',
+          cat: "كتابة — Dat",
+          prompt: `اكتب ضمير Dativ لـ <span class="de">sie (هم)</span>:`,
+          answersText: ["ihnen"],
+          explain: "sie (جمع) في Dat → ihnen.",
         },
 
-        // TYPE ترجمة (عربي → ألماني)
+        /*** B) الضمائر الانعكاسية (sich) ***/
+        // MC
         {
-          type: "type",
-          cat: "ترجمة (Akk)",
-          prompt: `ترجم: <b>أنا أرى الرجل.</b>`,
-          note: "sehen + den Mann",
-          answersText: ["ich sehe den mann"],
-          explain: '<span class="de">Ich sehe den Mann.</span>',
+          type: "mc",
+          cat: "Reflexiv — Akk",
+          prompt: `اكمل: <span class="de">Ich wasche ___.</span>`,
+          choices: ["mir", "mich", "sich"],
+          answer: 1,
+          explain: "انعكاسي مع ich في Akk → mich.",
         },
         {
-          type: "type",
-          cat: "ترجمة (Akk)",
-          prompt: `ترجم: <b>هي تشتري معطفًا.</b>`,
-          note: "نكرة مذكر → einen",
-          answersText: ["sie kauft einen mantel"],
-          explain: '<span class="de">Sie kauft einen Mantel.</span>',
+          type: "mc",
+          cat: "Reflexiv — Dat",
+          prompt: `اكمل: <span class="de">Ich wasche ___ die Hände.</span>`,
+          choices: ["mir", "mich", "sich"],
+          answer: 0,
+          explain: "مع جزء من الجسد يأتي غالبًا Dativ انعكاسي: mir.",
         },
         {
-          type: "type",
-          cat: "ترجمة (ضمائر)",
-          prompt: `ترجم: <b>هل تعرفين سارة؟ نعم، أنا أعرفها.</b>`,
-          answersText: ["kennst du sarah ja ich kenne sie"],
+          type: "mc",
+          cat: "Reflexiv — 3. شخص",
+          prompt: `اكمل: <span class="de">Er freut ___.</span>`,
+          choices: ["sich", "ihm", "ihn"],
+          answer: 0,
+          explain: "الفعل freut sich: هو يفرح — sich.",
+        },
+
+        // MULTI
+        {
+          type: "multi",
+          cat: "Reflexiv — Akk (اختَر الكل)",
+          prompt: `اختَر كل ضمائر الانعكاس في <b>Akk</b>:`,
+          choices: ["mich", "dich", "sich", "uns", "euch", "ihnen"],
+          answers: [0, 1, 2, 3, 4],
           explain:
-            '<span class="de">Kennst du Sarah? Ja, ich kenne sie.</span>',
+            "Akk reflexiv: mich, dich, sich, uns, euch, sich. (ihnen ليس Reflexiv).",
         },
 
-        // TYPE صياغة السؤال
+        // GAP
+        {
+          type: "gap",
+          cat: "Reflexiv — Dat",
+          prompt: `أكمل:`,
+          segments: ['<span class="de">Wir kämmen ', " die Haare.</span>"],
+          options: [["uns", "unsere", "euch"]],
+          answer: [0],
+          explain: "نستخدم Dativ reflexiv: uns (نحن نمشّط لأنفسنا الشعر).",
+        },
+
+        // TYPE
         {
           type: "type",
-          cat: "اصنع سؤال (Wen?)",
-          prompt: `اكتب السؤال عن المفعول:<br><span class="de">Ich liebe <b>Sarah</b>.</span>`,
-          note: "عن شخص → Wen",
-          answersText: ["wen liebst du"],
-          explain: '<span class="de">Wen liebst du?</span>',
+          cat: "Reflexiv — كتابة",
+          prompt: `اكتب الشكل الصحيح: <span class="de">Ihr beeilt ___.</span>`,
+          answersText: ["euch"],
+          explain: "ihr → euch (Akk/Dat reflexiv).",
+        },
+
+        /*** C) ضمائر الملكية + النهايات ***/
+        // MC
+        {
+          type: "mc",
+          cat: "ملكية — Nominativ",
+          prompt: `اختر الصحيح (NOM مؤنث): <span class="de">Das ist ___ Tasche (ich).</span>`,
+          choices: ["mein Tasche", "meine Tasche", "meiner Tasche"],
+          answer: 1,
+          explain: "مؤنث في NOM → -e: meine Tasche.",
+        },
+        {
+          type: "mc",
+          cat: "ملكية — Akkusativ",
+          prompt: `اختر الصحيح (AKK مذكر): <span class="de">Ich habe ___ Stift (du).</span>`,
+          choices: ["dein Stift", "deinen Stift", "deinem Stift"],
+          answer: 1,
+          explain: "مذكر في AKK → -en: deinen Stift.",
+        },
+        {
+          type: "mc",
+          cat: "ملكية — Dativ",
+          prompt: `اختر الصحيح (DAT جمع): <span class="de">Ich helfe ___ Kindern (wir).</span>`,
+          choices: ["unsere", "unseren", "unserem"],
+          answer: 1,
+          explain: "جمع في DAT → -en + غالبًا يضاف -n للاسم: unseren Kindern.",
+        },
+        {
+          type: "mc",
+          cat: "euer — قاعدة",
+          prompt: `اختر الصحيح: <span class="de">Ist das ___ Auto? (ihr)</span> <span class="mini-note">(NOM حيادي)</span>`,
+          choices: ["euer Auto", "eures Auto", "eure Auto"],
+          answer: 0,
+          explain: "NOM حيادي يأخذ نهاية صفر: euer Auto.",
+        },
+
+        // MULTI
+        {
+          type: "multi",
+          cat: "اختَر النهايات الصحيحة",
+          prompt: `لـ (sein) اختر كل الأشكال الصحيحة حسب الحالة:`,
+          choices: [
+            "sein<b>e</b> Lampe (Nom, f)",
+            "sein<b>en</b> Bruder (Akk, m)",
+            "sein<b>e</b> Kinder (Nom, Pl)",
+            "sein<b>em</b> Vater (Dat, m)",
+            "sein<b>e</b> Buch (Akk, n)",
+          ],
+          answers: [0, 1, 2, 3, 4],
+          explain:
+            "نهايات ein-words القياسية: f/pl: -e (Nom/Akk), m Akk: -en, m/n Dat: -em, n Nom/Akk: -∅ (لكن هنا كتبنا 'sein<b>e</b> Buch'؟ خطأ! النيوتر في AKK يكون بدون نهاية: 'sein Buch').",
+        },
+
+        // سنصحّح: اجعل الخيار الخامس خطأ
+        {
+          type: "multi",
+          cat: "اختَر النهايات الصحيحة (تصحيح)",
+          prompt: `لـ (sein) اختر الأشكال الصحيحة:`,
+          choices: [
+            "sein<b>e</b> Lampe (Nom, f)",
+            "sein<b>en</b> Bruder (Akk, m)",
+            "sein Buch (Akk, n)",
+            "sein<b>em</b> Vater (Dat, m)",
+            "sein<b>e</b> Kinder (Nom, Pl)",
+          ],
+          answers: [0, 1, 2, 3, 4],
+          explain: "الحيادي Nom/Akk بلا نهاية: sein Buch.",
+        },
+
+        // GAP
+        {
+          type: "gap",
+          cat: "ملكية — فراغات",
+          prompt: `أكمِل النهايات:`,
+          segments: [
+            '<span class="de">Ich kaufe ',
+            " Mantel (mein, m, Akk).</span>",
+          ],
+          options: [["mein", "meinen", "meinem"]],
+          answer: [1],
+          explain: "مذكر في AKK → -en: meinen Mantel.",
+        },
+
+        {
+          type: "gap",
+          cat: "euer — تطبيق",
+          prompt: `اختر الصحيح:`,
+          segments: [
+            '<span class="de">Wo ist ',
+            " Tasche? (ihr, f, Nom)</span>",
+          ],
+          options: [["euer", "eure", "euren", "eurem"]],
+          answer: [1],
+          explain: "مؤنث في NOM → -e: eure Tasche.",
+        },
+
+        // TYPE
+        {
+          type: "type",
+          cat: "ملكية — كتابة",
+          prompt: `حوّل إلى ملكية صحيحة: <span class="de">Das ist (ich) <b>___</b> Buch.</span> (Nom, n)`,
+          answersText: ["mein buch", "mein"],
+          explain: "نيوتر Nom → بلا نهاية: mein Buch.",
         },
         {
           type: "type",
-          cat: "اصنع سؤال (Was?)",
-          prompt: `اكتب السؤال:<br><span class="de">Er kauft <b>das Auto</b>.</span>`,
-          answersText: ["was kauft er"],
-          explain: '<span class="de">Was kauft er?</span>',
+          cat: "ملكية — كتابة",
+          prompt: `حوّل: <span class="de">Ich sehe (wir) <b>___</b> Freunde.</span> (Akk, Pl)`,
+          answersText: ["unsere freunde", "unsere"],
+          explain: "جمع Akk → -e: unsere Freunde.",
         },
         {
           type: "type",
-          cat: "اصنع سؤال (Wen?) — ضمير",
-          prompt: `اكتب السؤال:<br><span class="de">Sie fragt <b>dich</b>.</span>`,
-          answersText: ["wen fragt sie"],
-          explain: '<span class="de">Wen fragt sie?</span>',
+          cat: "ملكية — كتابة",
+          prompt: `حوّل: <span class="de">Ich helfe (sie/هي) <b>___</b> Mutter.</span> (Dat, f)`,
+          answersText: ["ihrer mutter", "ihrer"],
+          explain: "مؤنث Dat → -er: ihrer Mutter.",
+        },
+
+        // تحويل/تركيب جمل
+        {
+          type: "type",
+          cat: "صياغة ضمير ملكية",
+          prompt: `ترجم: <b>هذه سيارتُه</b> (هو).`,
+          answersText: ["das ist sein auto", "das ist sein auto."],
+          explain: "sein + (n, Nom): sein Auto.",
+        },
+        {
+          type: "type",
+          cat: "صياغة ضمير ملكية",
+          prompt: `ترجم: <b>أنا أبحث عن معطفِكم</b> (ihr, m, Akk).`,
+          answersText: ["ich suche euren mantel", "ich suche den euren mantel"],
+          explain: "مذكر Akk مع euer → euren Mantel.",
         },
       ];
 
-      /* ========= تقسيم حسب النوع ========= */
+      /* ==== تقسيم الأقسام ==== */
       const SECTION_ORDER = [
-        { key: "mc", title: "① اختيار واحد (MC)" },
-        { key: "multi", title: "② متعدّد (Multi)" },
-        { key: "gap", title: "③ فراغات منسدلة (Gap)" },
-        { key: "type", title: "④ كتابة حرّة (Type)" },
-        {
-          key: "type",
-          title: "⑤ ترجمة عربي → ألماني",
-          filterCatPrefix: "ترجمة",
-        },
-        {
-          key: "type",
-          title: "⑥ صياغة السؤال (Wen/Was…)",
-          filterCatPrefix: "اصنع سؤال",
-        },
+        { key: "mc", title: "① اختيار واحد — الضمائر & الانعكاس & الملكية" },
+        { key: "multi", title: "② متعدّد — تصنيف ومراجعة" },
+        { key: "gap", title: "③ فراغات — نهايات & أدوات" },
+        { key: "type", title: "④ كتابة — ضمائر & تحويل ملكية" },
       ];
 
       function buildSections() {
         return SECTION_ORDER.map((sec) => {
           const all = QUESTIONS.filter((q) => q.type === sec.key);
-          const filtered = sec.filterCatPrefix
-            ? all.filter((q) => (q.cat || "").startsWith(sec.filterCatPrefix))
-            : all.filter(
-                (q) =>
-                  !(q.cat || "").startsWith("ترجمة") &&
-                  !(q.cat || "").startsWith("اصنع سؤال")
-              );
-          return { title: sec.title, key: sec.key, questions: filtered };
+          return { title: sec.title, key: sec.key, questions: all };
         }).filter((s) => s.questions.length > 0);
       }
       const SECTIONS = buildSections();
 
-      /* ========= حالة عامة ========= */
+      /* ==== حالة عامة ==== */
       let globalAnswered = 0,
         globalCorrect = 0;
       let activeSectionIndex = -1;
       let i = 0,
         sectionScore = 0;
 
-      // عناصر
       const secList = document.getElementById("secList");
       const sectionsCard = document.getElementById("sectionsCard");
       const quizCard = document.getElementById("quizCard");
@@ -1217,15 +1207,11 @@
             ? "أسئلة متعددة"
             : q.type === "gap"
             ? "إكمال الفراغات"
-            : q.cat && q.cat.startsWith("ترجمة")
-            ? "ترجمة كتابة"
-            : q.cat && q.cat.startsWith("اصنع سؤال")
-            ? "صياغة سؤال"
             : "اكتب الجواب";
+
         catPill.textContent = q.cat || "—";
         promptEl.innerHTML = q.prompt;
         content.innerHTML = "";
-
         bar.style.width = `${(i / sec.questions.length) * 100}%`;
 
         if (q.type === "mc") {
@@ -1247,7 +1233,7 @@
         if (q.type === "multi") {
           const wrap = document.createElement("div");
           wrap.className = "choices";
-          q.choices.forEach((c) => {
+          q.choices.forEach((c, ix) => {
             const b = document.createElement("button");
             b.className = "choice";
             b.innerHTML = c;
@@ -1262,7 +1248,7 @@
           gl.className = "gap-line";
           q.segments.forEach((seg, ix) => {
             gl.insertAdjacentHTML("beforeend", seg);
-            if (ix < q.options.length) {
+            if (ix < (q.options?.length || 0)) {
               const s = document.createElement("select");
               s.className = "gap";
               q.options[ix].forEach((opt) => {
@@ -1332,7 +1318,7 @@
           (q.type === "type" && String(ua).trim() === "")
         ) {
           feedback.innerHTML =
-            '<div class="feedback tip">اختر/اكتب إجابة أولاً.</div>';
+            '<div class="feedback tip">اختر/اكتب إجابة أولًا.</div>';
           return;
         }
 
@@ -1350,7 +1336,7 @@
           correct = accepted.includes(normalized);
         }
 
-        // وسم بصري
+        // وسوم مرئية
         if (q.type === "mc" || q.type === "multi") {
           const btns = [...content.querySelectorAll(".choice")];
           if (q.type === "mc") {
@@ -1396,13 +1382,11 @@
         }
         updateGlobal();
 
-        document.getElementById("nextBtn").disabled = false;
-        document.getElementById("checkBtn").disabled = true;
+        nextBtn.disabled = false;
+        checkBtn.disabled = true;
 
         const last = i === sec.questions.length - 1;
-        document.getElementById("nextBtn").textContent = last
-          ? "إنهاء وعرض نتيجة القسم"
-          : "التالي ⟵";
+        nextBtn.textContent = last ? "إنهاء وعرض نتيجة القسم" : "التالي ⟵";
       };
 
       document.getElementById("nextBtn").onclick = () => {
@@ -1410,16 +1394,13 @@
         if (i < sec.questions.length - 1) {
           i++;
           renderQuestion();
-          document.getElementById("nextBtn").disabled = true;
-          document.getElementById("bar").style.width = `${
-            (i / sec.questions.length) * 100
-          }%`;
+          nextBtn.disabled = true;
+          bar.style.width = `${(i / sec.questions.length) * 100}%`;
         } else {
-          // ملخّص القسم
           const percent = Math.round(
             (sectionScore / sec.questions.length) * 100
           );
-          document.getElementById("quizCard").innerHTML = `
+          quizCard.innerHTML = `
             <div class="prompt" style="text-align:center;font-size:26px;margin-bottom:8px">${
               sec.title
             }</div>
@@ -1439,9 +1420,8 @@
 
       document.getElementById("exitBtn").onclick = () => exitSection();
 
-      // انطلاق
+      // Init
       function init() {
-        // في الدِسكتوب بيظهر sidebar كعمود؛ بالموبايل كأوفرلاي
         applySidebarMode();
         renderSectionsList();
         updateGlobal();
